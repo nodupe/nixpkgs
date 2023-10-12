@@ -1,36 +1,12 @@
 { systemd
 , makeWrapper
-, stdenv
 , binutils-unwrapped
 , sbsigntool
-, makeRustPlatform
 , rustPlatform
-, rustc
-, cargo
 , fetchFromGitHub
-, lanzaboote-stub
 , lib
-, mkStdenvNoLibs
+, uefiPkgs
 }:
-let
-  uefiPlatform = lib.systems.elaborate "${stdenv.hostPlatform.qemuArch}-windows" // {
-    rustc.config = "${stdenv.hostPlatform.qemuArch}-unknown-uefi";
-  };
-  uefiStdenv = mkStdenvNoLibs (stdenv.override (old: {
-    hostPlatform = uefiPlatform;
-    targetPlatform = uefiPlatform;
-
-    # cc = buildPackages.llvmPackages.clang;
-  }));
-  uefiRustc = rustc.override {
-    stdenv = uefiStdenv;
-  };
-  uefiRustPlatform = makeRustPlatform {
-    stdenv = uefiStdenv;
-    rustc = uefiRustc;
-    inherit cargo;
-  };
-in
 rustPlatform.buildRustPackage rec {
   pname = "lanzaboote_tool";
   version = "0.3.0";
@@ -65,9 +41,10 @@ rustPlatform.buildRustPackage rec {
     sbsigntool
   ];
 
-  passthru.stub = (lanzaboote-stub.override {
-    rustPlatform = uefiRustPlatform;
-  });
+  passthru = {
+    stub = uefiPkgs.lanzaboote-stub;
+  };
+
 
   meta = with lib; {
     description = "Lanzaboote UEFI tooling for SecureBoot enablement on NixOS systems";

@@ -92,4 +92,7 @@ lib.makeScope newScope (self: with self; {
     });
   };
 
+  lanzaboote-stub = callPackage ./lanzaboote {
+    rustPlatform = crossRustPlatform;
+  };
 })
