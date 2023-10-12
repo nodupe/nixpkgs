@@ -248,4 +248,24 @@ rec {
         env = (args.env or {}) // { NIX_CFLAGS_COMPILE = toString (args.env.NIX_CFLAGS_COMPILE or "") + " ${toString compilerFlags}"; };
       });
     });
+
+  /* Modify a stdenv so that it builds binaries with the specified list of
+     Rust flags appended and passed to rustc.
+
+     This example would recompile every Rust derivation on the system
+     with the lld linker in the PATH.
+
+     Example:
+       nixpkgs.overlays = [
+         (self: super: {
+           stdenv = super.withRustFlags [ "-C linker=lld" ] super.stdenv;
+         })
+       ];
+  */
+  withRustFlags = compilerFlags: stdenv:
+    stdenv.override (old: {
+      mkDerivationFromStdenv = extendMkDerivationArgs old (args: {
+        RUSTFLAGS = lib.concatStringsSep " " ([ (args.RUSTFLAGS or "") ] ++ compilerFlags);
+      });
+    });
 }
