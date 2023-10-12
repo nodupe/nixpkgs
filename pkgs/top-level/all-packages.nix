@@ -7683,6 +7683,8 @@ with pkgs;
 
   edk2-uefi-shell = callPackage ../tools/misc/edk2-uefi-shell { };
 
+  uefiPkgs = callPackage ../os-specific/uefi { };
+
   edl = callPackage ../development/embedded/edl { };
 
   edlib = callPackage ../development/libraries/science/biology/edlib { };
