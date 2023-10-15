@@ -12715,6 +12715,8 @@ self: super: with self; {
 
   setproctitle = callPackage ../development/python-modules/setproctitle { };
 
+  settngs = callPackage ../development/python-modules/settngs { };
+  
   setupmeta = callPackage ../development/python-modules/setupmeta { };
 
   setuptools-changelog-shortener = callPackage ../development/python-modules/setuptools-changelog-shortener { };
