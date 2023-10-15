@@ -9155,6 +9155,8 @@ self: super: with self; {
   
   pyinstaller-versionfile = callPackage ../development/python-modules/pyinstaller-versionfile { };
 
+  pyinstaller-hooks-contrib = callPackage ../development/python-modules/pyinstaller-hooks-contrib { };
+    
   pyisy = callPackage ../development/python-modules/pyisy { };
 
   pyixapi = callPackage ../development/python-modules/pyixapi { };
