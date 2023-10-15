@@ -15632,6 +15632,8 @@ self: super: with self; {
 
   wordfreq = callPackage ../development/python-modules/wordfreq { };
 
+  wordninja = callPackage ../development/python-modules/wordninja { };
+  
   worldengine = callPackage ../development/python-modules/worldengine { };
 
   wrapio = callPackage ../development/python-modules/wrapio { };
