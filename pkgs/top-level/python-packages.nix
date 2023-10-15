@@ -9107,6 +9107,8 @@ self: super: with self; {
 
   py65 = callPackage ../development/python-modules/py65 { };
 
+  py7zr = callPackage ../development/python-modules/py7zr { };
+
   pyaehw4a1 = callPackage ../development/python-modules/pyaehw4a1 { };
 
   pyatag = callPackage ../development/python-modules/pyatag { };
