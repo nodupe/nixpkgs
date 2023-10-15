@@ -13759,6 +13759,8 @@ self: super: with self; {
 
   testfixtures = callPackage ../development/python-modules/testfixtures { };
 
+  text2digits = callPackage ../development/python-modules/text2digits { };
+  
   textfsm = callPackage ../development/python-modules/textfsm { };
 
   textile = callPackage ../development/python-modules/textile { };
