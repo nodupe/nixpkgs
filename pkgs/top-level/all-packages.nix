@@ -29165,6 +29165,8 @@ with pkgs;
 
   comic-relief = callPackage ../data/fonts/comic-relief { };
 
+  comictagger = callPackage ../applications/misc/comictagger { };
+  
   comixcursors = callPackage ../data/icons/comixcursors { };
 
   corefonts = callPackage ../data/fonts/corefonts { };
