@@ -1,20 +1,7 @@
-{
-  fetchgit
-, git
-, lib
-, p7zip
-, pkgs
-, python3
-, python3Packages
-, rar
-, unrar
-, unrar-wrapper
-, libsForQt5
-, xorg
-}:
+{ lib, git, python3, python3Packages, unrar, libsForQt5, fetchPypi }:
 
 let
-  myPython = python3.withPackages (pkgs: [
+  dependenciesPython = python3.withPackages (pkgs: [
     python3.pkgs.appdirs
     python3.pkgs.beautifulsoup4
     python3.pkgs.configparser
@@ -44,38 +31,24 @@ let
     python3.pkgs.pywayland
   ]);
 
-  in
-
-python3.pkgs.buildPythonApplication rec {
+in python3.pkgs.buildPythonApplication rec {
   pname = "comictagger";
-  #  version = "1.6-alpha.8";
   format = "pyproject";
   version = "1.5.5";
   dists = "x86_64-linux";
 
-  src = fetchgit {
-    url = "https://github.com/comictagger/comictagger.git";
-    leaveDotGit = "true";
-    rev = "96c5c4aa28cf38afa51ecc3eb2f0a9c65d91b686";
-    sha256 = "sha256-ZevKw9Izpx+f9PyxvpVSw0BwMHuoEzw6mxaDDWR9C0U=";
+  src = fetchPypi {
+    pname = "comictagger";
+    version = "1.5.5";
+    hash = "sha256-f/SS6mo5zIcNBN/FRMhRPMNOeB1BIqBhsAogjsmdjB0=";
   };
-  runtimeDeps = [
-  #  unrar
-  #    p7zip
-  #   unrar-wrapper
-  ];
 
   preFixup = ''
-wrapQtApp "$out/bin/comictagger"
-''; 
-  propagatedBuildInputs = [
-    myPython
-    xorg.libxcb
-    libsForQt5.qtbase
-    unrar
-  ];
-  nativeBuildInputs = [ git myPython libsForQt5.wrapQtAppsHook ];
-  
+    wrapQtApp "$out/bin/comictagger"
+  '';
+  propagatedBuildInputs = [ dependenciesPython libsForQt5.qtbase ];
+  nativeBuildInputs = [ git dependenciesPython libsForQt5.wrapQtAppsHook ];
+
   meta = with lib; {
     description = "A multi-platform app for writing metadata to digital comics";
     homepage = "https://github.com/comictagger/comictagger";
