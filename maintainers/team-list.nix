@@ -430,6 +430,7 @@ with lib.maintainers; {
     members = [
       cleeyv
       ryantm
+      lassulus
     ];
     scope = "Maintain Jitsi.";
     shortName = "Jitsi";
@@ -439,6 +440,7 @@ with lib.maintainers; {
     members = [
       GaetanLepage
       natsukium
+      thomasjm
     ];
     scope = "Maintain Jupyter and related packages.";
     shortName = "Jupyter";
@@ -931,7 +933,6 @@ with lib.maintainers; {
   wdz = {
     members = [
       n0emis
-      netali
       vidister
       johannwagner
       yuka
