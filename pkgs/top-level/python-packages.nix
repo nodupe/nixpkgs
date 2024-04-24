@@ -1851,7 +1851,8 @@ self: super: with self; {
   coincurve = callPackage ../development/python-modules/coincurve {
     inherit (pkgs) secp256k1;
   };
-
+  comicfn2dict = callPackage ../development/python-modules/comicfn2dict {};
+  
   comicon = callPackage ../development/python-modules/comicon { };
 
   command_runner = callPackage ../development/python-modules/command_runner { };
