@@ -9,12 +9,12 @@
 
 buildPythonPackage rec {
   pname = "settngs";
-  version = "0.7.2";
+  version = "0.10.0";
   format = "pyproject";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "sha256-r09vq9aFXWw0mdqHl3DYZyndrSVwR0XlhKOzy3c/xfo=";
+    sha256 = "sha256-j+1IZ7QnpJKJqJGDN78jovz7h5f8EzPGp3Q0ZQnkH5Y=";
   };
 
   propagatedBuildInputs = [
