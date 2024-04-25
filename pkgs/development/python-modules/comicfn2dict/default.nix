@@ -2,7 +2,7 @@
 , buildPythonPackage
 , fetchPypi
 , pkgs
-,python3
+, python3
   
 }:
 
@@ -21,6 +21,7 @@ buildPythonPackage rec {
   ];
   propagatedBuildInputs = [
     python3.pkgs.poetry-core
+    
                           ];
 
   pythonImportsCheck = [ "comicfn2dict" ];
