@@ -2229,6 +2229,8 @@ self: super: with self; {
 
   cometblue-lite = callPackage ../development/python-modules/cometblue-lite { };
 
+  comicinfoxml = callPackage ../development/python-modules/comicinfoxml { };
+  
   comm = callPackage ../development/python-modules/comm { };
 
   commandparse = callPackage ../development/python-modules/commandparse { };
@@ -4312,6 +4314,8 @@ self: super: with self; {
 
   gcal-sync = callPackage ../development/python-modules/gcal-sync { };
 
+    gcd-talker = callPackage ../development/python-modules/gcd-talker { };
+
   gcovr = callPackage ../development/python-modules/gcovr { };
 
   gcs-oauth2-boto-plugin = callPackage ../development/python-modules/gcs-oauth2-boto-plugin { };
@@ -4905,7 +4909,7 @@ self: super: with self; {
   hap-python = callPackage ../development/python-modules/hap-python { };
 
   hass-nabucasa = callPackage ../development/python-modules/hass-nabucasa { };
-
+ 
   hassil = callPackage ../development/python-modules/hassil { };
 
   hatasmota = callPackage ../development/python-modules/hatasmota { };
@@ -5503,6 +5507,8 @@ self: super: with self; {
 
   iso8601 = callPackage ../development/python-modules/iso8601 { };
 
+  isocodes = callPackage ../development/python-modules/isocodes { };
+  
   isodate = callPackage ../development/python-modules/isodate { };
 
   isoduration = callPackage ../development/python-modules/isoduration { };
@@ -6780,6 +6786,8 @@ self: super: with self; {
 
   meteofrance-api = callPackage ../development/python-modules/meteofrance-api { };
 
+  metron_talker = callPackage ../development/python-modules/metron_talker { };
+  
   mezzanine = callPackage ../development/python-modules/mezzanine { };
 
   mf2py = callPackage ../development/python-modules/mf2py { };
@@ -6965,6 +6973,8 @@ self: super: with self; {
 
   mohawk = callPackage ../development/python-modules/mohawk { };
 
+  mokkari = callPackage ../development/python-modules/mokkari { };
+  
   molecule = callPackage ../development/python-modules/molecule { };
 
   molecule-plugins = callPackage ../development/python-modules/molecule/plugins.nix { };
@@ -9044,6 +9054,8 @@ self: super: with self; {
       inherit (pkgs.xorg) libX11;
   };
 
+  pillow-avif-plugin = callPackage ../development/python-modules/pillow-avif-plugin {};
+  
   pims = callPackage ../development/python-modules/pims { };
 
   pinboard = callPackage ../development/python-modules/pinboard { };
