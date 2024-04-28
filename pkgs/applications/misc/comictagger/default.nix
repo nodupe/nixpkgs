@@ -96,7 +96,7 @@ in python3.pkgs.buildPythonApplication {
     src = fetchgit {
       url = "https://github.com/comictagger/comictagger.git";
       rev = "996397b9d51872ea2a3bae9ef890495775a196f8";
-      hash = "sha256-AcQ6ZI4ksKE5j4IZHWYg8HiIsVStO7UIYB6C2DYioKs=";
+      hash = "sha256-d1UDFd1XNW2u29IVV8AulWGvScS0+adg8uIcitLWoeY=";
 
 #      version = "1.6.0-alpha.12";
 #      dists = "x86_64-linux";
