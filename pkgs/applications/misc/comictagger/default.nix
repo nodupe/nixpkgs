@@ -7,7 +7,6 @@
 }:
 let
   dependenciesPython = python3.withPackages (pkgs: [
-
     # install_requires
     python3.pkgs.appdirs #a12
     python3.pkgs.beautifulsoup4 #a12
@@ -177,8 +176,6 @@ in python3.pkgs.buildPythonApplication {
 substituteInPlace comictalker/comictalker.py \
 --replace "1.6.0a7" "0.1.dev1"
 '';
-
-    
   meta = with lib; {
     description = "A multi-platform app for writing metadata to digital comics";
     homepage = "https://github.com/comictagger/comictagger";
@@ -186,4 +183,5 @@ substituteInPlace comictalker/comictalker.py \
     maintainers = [ maintainers.provenzano ];
     platforms = [ "x86_64-linux" ];
   };
+ };
 }
