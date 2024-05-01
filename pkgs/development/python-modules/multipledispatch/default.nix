@@ -7,6 +7,7 @@
 buildPythonPackage rec {
   pname = "multipledispatch";
   version = "1.0.0";
+  format = "setuptools";
 
   src = fetchPypi {
     inherit pname version;
@@ -22,6 +23,5 @@ buildPythonPackage rec {
     homepage = "https://github.com/mrocklin/multipledispatch/";
     description = "A relatively sane approach to multiple dispatch in Python";
     license = lib.licenses.bsd3;
-    maintainers = with lib.maintainers; [ fridh ];
   };
 }

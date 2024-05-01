@@ -10,8 +10,9 @@
 rustPlatform.buildRustPackage {
   pname = "nushell_plugin_query";
   inherit (nushell) version src;
-  cargoHash = "sha256-seqr4FZHg/f/8iMwSurJRKr41pUbKKti6H2z/JfYkuU=";
+  cargoHash = "sha256-takIDfMriDzZT/9JkqWPis10EaZhfwGpi7EkoOh4+vw=";
 
+  nativeBuildInputs = lib.optionals stdenv.cc.isClang [ rustPlatform.bindgenHook ];
   buildInputs = lib.optionals stdenv.isDarwin [ IOKit CoreFoundation ];
   cargoBuildFlags = [ "--package nu_plugin_query" ];
 
@@ -26,6 +27,7 @@ rustPlatform.buildRustPackage {
 
   meta = with lib; {
     description = "A Nushell plugin to query JSON, XML, and various web data";
+    mainProgram = "nu_plugin_query";
     homepage = "https://github.com/nushell/nushell/tree/${version}/crates/nu_plugin_query";
     license = licenses.mpl20;
     maintainers = with maintainers; [ happysalada aidalgol ];

@@ -7,16 +7,16 @@
 
 buildGoModule rec {
   pname = "kics";
-  version = "1.7.10";
+  version = "2.0.0";
 
   src = fetchFromGitHub {
     owner = "Checkmarx";
     repo = "kics";
     rev = "v${version}";
-    hash = "sha256-3guudT+PidrgHcJ6/lA/XWHmZXdvjGOhtpoO+9hkYOY=";
+    hash = "sha256-OdX3ipfPj+rope5oT5ND9MEaefW36X6XDV5F7PaQOuw=";
   };
 
-  vendorHash = "sha256-gJu3B30IPp8A/xgtE5fzThQAtnFbbzr8ZwucAsObBxs=";
+  vendorHash = "sha256-vYAMzXBQIt8F9DTGLkWNXx6e08MPo12W2ogiTZ8gcjw=";
 
   subPackages = [ "cmd/console" ];
 
@@ -43,5 +43,6 @@ buildGoModule rec {
     homepage = "https://github.com/Checkmarx/kics";
     license = licenses.asl20;
     maintainers = with maintainers; [ patryk4815 ];
+    mainProgram = "kics";
   };
 }

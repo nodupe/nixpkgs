@@ -22,7 +22,7 @@ in
     services.unifi.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Whether or not to enable the unifi controller service.
       '';
     };
@@ -31,33 +31,26 @@ in
       type = lib.types.package;
       default = if (lib.versionAtLeast (lib.getVersion cfg.unifiPackage) "7.5") then pkgs.jdk17_headless else if (lib.versionAtLeast (lib.getVersion cfg.unifiPackage) "7.3") then pkgs.jdk11 else pkgs.jre8;
       defaultText = lib.literalExpression ''if (lib.versionAtLeast (lib.getVersion cfg.unifiPackage) "7.5") then pkgs.jdk17_headless else if (lib.versionAtLeast (lib.getVersion cfg.unifiPackage) "7.3" then pkgs.jdk11 else pkgs.jre8'';
-      description = lib.mdDoc ''
+      description = ''
         The JRE package to use. Check the release notes to ensure it is supported.
       '';
     };
 
-    services.unifi.unifiPackage = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.unifi5;
-      defaultText = lib.literalExpression "pkgs.unifi5";
-      description = lib.mdDoc ''
-        The unifi package to use.
-      '';
-    };
+    services.unifi.unifiPackage = lib.mkPackageOption pkgs "unifi5" { };
 
-    services.unifi.mongodbPackage = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.mongodb-4_4;
-      defaultText = lib.literalExpression "pkgs.mongodb";
-      description = lib.mdDoc ''
-        The mongodb package to use. Please note: unifi7 officially only supports mongodb up until 3.6 but works with 4.4.
+    services.unifi.mongodbPackage = lib.mkPackageOption pkgs "mongodb" {
+      default = "mongodb-5_0";
+      extraDescription = ''
+        ::: {.note}
+        unifi7 officially only supports mongodb up until 4.4 but works with 5.0.
+        :::
       '';
     };
 
     services.unifi.openFirewall = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = lib.mdDoc ''
+      description = ''
         Whether or not to open the minimum required ports on the firewall.
 
         This is necessary to allow firmware upgrades and device discovery to
@@ -70,7 +63,7 @@ in
       type = with lib.types; nullOr int;
       default = null;
       example = 1024;
-      description = lib.mdDoc ''
+      description = ''
         Set the initial heap size for the JVM in MB. If this option isn't set, the
         JVM will decide this value at runtime.
       '';
@@ -80,7 +73,7 @@ in
       type = with lib.types; nullOr int;
       default = null;
       example = 4096;
-      description = lib.mdDoc ''
+      description = ''
         Set the maximum heap size for the JVM in MB. If this option isn't set, the
         JVM will decide this value at runtime.
       '';
@@ -90,7 +83,7 @@ in
       type = with lib.types; listOf str;
       default = [ ];
       example = lib.literalExpression ''["-Xlog:gc"]'';
-      description = lib.mdDoc ''
+      description = ''
         Set extra options to pass to the JVM.
       '';
     };

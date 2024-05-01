@@ -13,7 +13,6 @@
 # package without splicing See: https://github.com/NixOS/nixpkgs/pull/107606
 , pkgs
 , fetchurl
-, fetchpatch
 , autoreconfHook
 , zlib
 , openssl
@@ -31,6 +30,7 @@
 , nixosTests
 , withFIDO ? stdenv.hostPlatform.isUnix && !stdenv.hostPlatform.isMusl
 , withPAM ? stdenv.hostPlatform.isLinux
+, dsaKeysSupport ? false
 , linkOpenssl ? true
 }:
 
@@ -85,6 +85,7 @@ stdenv.mkDerivation {
     "--with-libedit=yes"
     "--disable-strip"
     (lib.withFeature withPAM "pam")
+    (lib.enableFeature dsaKeysSupport "dsa-keys")
   ] ++ lib.optional (etcDir != null) "--sysconfdir=${etcDir}"
     ++ lib.optional withFIDO "--with-security-key-builtin=yes"
     ++ lib.optional withKerberos (assert libkrb5 != null; "--with-kerberos5=${libkrb5}")
@@ -169,6 +170,7 @@ stdenv.mkDerivation {
 
   passthru.tests = {
     borgbackup-integration = nixosTests.borgbackup;
+    openssh = nixosTests.openssh;
   };
 
   meta = with lib; {

@@ -10,13 +10,13 @@
 stdenv.mkDerivation (finalAttrs: {
   pname = "UHDM";
   # When updating this package, also consider updating science/logic/surelog
-  version = "1.77";
+  version = "1.82";
 
   src = fetchFromGitHub {
     owner = "chipsalliance";
     repo = finalAttrs.pname;
     rev = "v${finalAttrs.version}";
-    hash = "sha256-JKhpcPG4hWlcn2C+Wlx7yNIMXXurAMxLSK4xWN2akMQ=";
+    hash = "sha256-sl83l6nLN/bluED5bnFShviD1Vv8hmRazxIcLUg/ego=";
     fetchSubmodules = false;  # we use all dependencies from nix
   };
 

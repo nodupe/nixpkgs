@@ -16,16 +16,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "zellij";
-  version = "0.39.1";
+  version = "0.40.0";
 
   src = fetchFromGitHub {
     owner = "zellij-org";
     repo = "zellij";
     rev = "v${version}";
-    hash = "sha256-nT4P/ZlquJz48T8LCRQd5menL8vtGMBSUgZNJYx0Pn4=";
+    hash = "sha256-1z7qIgjElE9gw0lY+A17gsYIcnKRceZTFnRd8fMeBg8=";
   };
 
-  cargoHash = "sha256-jp3FS+sEvQY0DtVPCkJjAZlEc2bJOiA20+Pdt//yat4=";
+  cargoHash = "sha256-KXXldWtcUsdbDsWd66Q1TbaClfr+Uo8f6gCi1exNIRc=";
 
   nativeBuildInputs = [
     mandown
@@ -63,7 +63,7 @@ rustPlatform.buildRustPackage rec {
     homepage = "https://zellij.dev/";
     changelog = "https://github.com/zellij-org/zellij/blob/v${version}/CHANGELOG.md";
     license = with licenses; [ mit ];
-    maintainers = with maintainers; [ therealansh _0x4A6F abbe thehedgeh0g ];
+    maintainers = with maintainers; [ therealansh _0x4A6F abbe pyrox0 ];
     mainProgram = "zellij";
   };
 }

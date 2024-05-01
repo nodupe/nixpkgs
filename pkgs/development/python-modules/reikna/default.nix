@@ -14,6 +14,7 @@
 buildPythonPackage rec {
   pname = "reikna";
   version = "0.8.0";
+  format = "setuptools";
 
   src = fetchPypi {
     inherit pname version;
@@ -37,7 +38,6 @@ buildPythonPackage rec {
     description = "GPGPU algorithms for PyCUDA and PyOpenCL";
     homepage = "https://github.com/fjarri/reikna";
     license = licenses.mit;
-    maintainers = [ maintainers.fridh ];
 
   };
 

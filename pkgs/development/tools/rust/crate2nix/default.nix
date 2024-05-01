@@ -10,18 +10,18 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "crate2nix";
-  version = "0.11.0";
+  version = "0.14.0";
 
   src = fetchFromGitHub {
     owner = "nix-community";
     repo = pname;
     rev = version;
-    sha256 = "sha256-nyX1lfaA0eBSB/BaxPzCsyD8p/hxCwNIvr4Ru3i/YX0=";
+    hash = "sha256-rGT3CW64cJS9nlnWPFWSc1iEa3dNZecVVuPVGzcsHe8=";
   };
 
   sourceRoot = "${src.name}/crate2nix";
 
-  cargoSha256 = "sha256-3+emOr3hh+DDkboJbYyJFZgkzmcdA9jdronz7wM4x28=";
+  cargoHash = "sha256-YoE6wrQNQcRo/yaiVpASU2VOmHCPM4pDgTejn0ovOVY=";
 
   nativeBuildInputs = [ makeWrapper ];
 
@@ -43,6 +43,7 @@ rustPlatform.buildRustPackage rec {
 
   meta = with lib; {
     description = "A Nix build file generator for Rust crates.";
+    mainProgram = "crate2nix";
     longDescription = ''
       Crate2nix generates Nix files from Cargo.toml/lock files
       so that you can build every crate individually in a Nix sandbox.

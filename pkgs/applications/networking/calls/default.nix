@@ -34,7 +34,7 @@
 
 stdenv.mkDerivation rec {
   pname = "calls";
-  version = "45.0";
+  version = "46.0";
 
   src = fetchFromGitLab {
     domain = "gitlab.gnome.org";
@@ -42,7 +42,7 @@ stdenv.mkDerivation rec {
     repo = pname;
     rev = "v${version}";
     fetchSubmodules = true;
-    hash = "sha256-NIQFKVpZSxY2QOb73WfYsCzMQwB9XySoADCL7IlmGe8=";
+    hash = "sha256-ZUVMK0Ex77EQKTGM0gBDHt8W9l4rHspihYduMcwMGho=";
   };
 
   outputs = [ "out" "devdoc" ];
@@ -112,5 +112,6 @@ stdenv.mkDerivation rec {
     license = licenses.gpl3Plus;
     maintainers = with maintainers; [ craigem lheckemann tomfitzhenry ];
     platforms = platforms.linux;
+    mainProgram = "gnome-calls";
   };
 }

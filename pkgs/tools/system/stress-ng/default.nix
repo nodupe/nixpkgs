@@ -4,13 +4,13 @@
 
 stdenv.mkDerivation rec {
   pname = "stress-ng";
-  version = "0.17.01";
+  version = "0.17.07";
 
   src = fetchFromGitHub {
     owner = "ColinIanKing";
     repo = pname;
     rev = "V${version}";
-    hash = "sha256-hTwA0BT8r54Gnyf/itP2onQE6zhNEoejseuIEwvx4D8=";
+    hash = "sha256-eXDCzyZ/YeumHjuLpr6stkWkApwfi8ExDx3uZTVa/cs=";
   };
 
   postPatch = ''
@@ -70,5 +70,6 @@ stdenv.mkDerivation rec {
     license = licenses.gpl2Plus;
     maintainers = with maintainers; [ c0bw3b ];
     platforms = platforms.unix;
+    mainProgram = "stress-ng";
   };
 }

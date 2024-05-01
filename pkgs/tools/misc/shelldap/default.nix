@@ -1,6 +1,8 @@
 { lib
+, stdenv
 , fetchFromGitHub
 , perlPackages
+, shortenPerlShebang
 }:
 
 perlPackages.buildPerlPackage rec {
@@ -26,6 +28,8 @@ perlPackages.buildPerlPackage rec {
     YAMLSyck
   ];
 
+  nativeBuildInputs = lib.optional stdenv.isDarwin shortenPerlShebang;
+
   prePatch = ''
     touch Makefile.PL
   '';
@@ -33,7 +37,11 @@ perlPackages.buildPerlPackage rec {
   installPhase = ''
     runHook preInstall
     install -Dm555 -t $out/bin shelldap
-    runHook preInstall
+    runHook postInstall
+  '';
+
+  postInstall = lib.optionalString stdenv.isDarwin ''
+    shortenPerlShebang $out/bin/shelldap
   '';
 
   # no make target 'test', not tests provided by source
@@ -48,5 +56,6 @@ perlPackages.buildPerlPackage rec {
     license = with licenses; [ bsd3 ];
     maintainers = with maintainers; [ clerie tobiasBora ];
     platforms = platforms.unix;
+    mainProgram = "shelldap";
   };
 }

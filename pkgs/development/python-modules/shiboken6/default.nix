@@ -5,7 +5,6 @@
 , cmake
 , autoPatchelfHook
 , stdenv
-, libxcrypt
 }:
 
 let
@@ -13,12 +12,12 @@ let
 in
 stdenv'.mkDerivation rec {
   pname = "shiboken6";
-  version = "6.5.2";
+  version = "6.7.0";
 
   src = fetchurl {
     # https://download.qt.io/official_releases/QtForPython/shiboken6/
     url = "https://download.qt.io/official_releases/QtForPython/shiboken6/PySide6-${version}-src/pyside-setup-everywhere-src-${version}.tar.xz";
-    sha256 = "sha256-kNvx0U/NQcmKfL6kS4pJUeENC3mOFUdJdW5JRmVNG6g";
+    hash = "sha256-gurjcHN99ez1OcFl0J18gdX8YVOlQbjT03sRJ1+ePo8=";
   };
 
   sourceRoot = "pyside-setup-everywhere-src-${version}/sources/${pname}";
@@ -29,7 +28,7 @@ stdenv'.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    python
+    (python.pythonOnBuildForHost.withPackages (ps: [ ps.setuptools ]))
   ] ++ lib.optionals stdenv.isLinux [
     autoPatchelfHook
   ];
@@ -47,14 +46,20 @@ stdenv'.mkDerivation rec {
     "-DBUILD_TESTS=OFF"
   ];
 
-  # Due to Shiboken.abi3.so being linked to libshiboken6.abi3.so.6.5 in the build tree,
+  # We intentionally use single quotes around `${BASH}` since it expands from a CMake
+  # variable available in this file.
+  postPatch = ''
+    substituteInPlace cmake/ShibokenHelpers.cmake --replace-fail '#!/bin/bash' '#!''${BASH}'
+  '';
+
+  # Due to Shiboken.abi3.so being linked to libshiboken6.abi3.so.6.6 in the build tree,
   # we need to remove the build tree reference from the RPATH and then add the correct
   # directory to the RPATH. On Linux, the second part is handled by autoPatchelfHook.
   # https://bugreports.qt.io/browse/PYSIDE-2233
   preFixup = ''
     echo "fixing RPATH of Shiboken.abi3.so"
   '' + lib.optionalString stdenv.isDarwin ''
-    install_name_tool -change {@rpath,$out/lib}/libshiboken6.abi3.6.5.dylib $out/${python.sitePackages}/shiboken6/Shiboken.abi3.so
+    install_name_tool -change {@rpath,$out/lib}/libshiboken6.abi3.6.6.dylib $out/${python.sitePackages}/shiboken6/Shiboken.abi3.so
   '' + lib.optionalString stdenv.isLinux ''
     patchelf $out/${python.sitePackages}/shiboken6/Shiboken.abi3.so --shrink-rpath --allowed-rpath-prefixes ${builtins.storeDir}
   '';

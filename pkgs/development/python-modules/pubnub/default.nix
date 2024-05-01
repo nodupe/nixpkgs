@@ -1,32 +1,36 @@
-{ lib
-, aiohttp
-, buildPythonPackage
-, busypie
-, cbor2
-, fetchFromGitHub
-, pycryptodomex
-, pytestCheckHook
-, pytest-vcr
-, pytest-asyncio
-, requests
-, pythonOlder
+{
+  lib,
+  aiohttp,
+  buildPythonPackage,
+  busypie,
+  cbor2,
+  fetchFromGitHub,
+  pycryptodomex,
+  pytestCheckHook,
+  pytest-vcr,
+  pytest-asyncio,
+  requests,
+  pythonOlder,
+  setuptools,
 }:
 
 buildPythonPackage rec {
   pname = "pubnub";
-  version = "7.3.1";
-  format = "setuptools";
+  version = "7.4.4";
+  pyproject = true;
 
   disabled = pythonOlder "3.7";
 
   src = fetchFromGitHub {
-    owner = pname;
+    owner = "pubnub";
     repo = "python";
     rev = "refs/tags/v${version}";
-    hash = "sha256-V6yw/OscTGwrFcjHEhwtaT7txWLqbVj0uYjuoSAtP2E=";
+    hash = "sha256-4Paodw3t2RvAKrDMcWHIGLs5JNtH/9sP+BTyAm/hj4E=";
   };
 
-  propagatedBuildInputs = [
+  build-system = [ setuptools ];
+
+  dependencies = [
     aiohttp
     cbor2
     pycryptodomex
@@ -52,9 +56,7 @@ buildPythonPackage rec {
     "test_handshaking"
   ];
 
-  pythonImportsCheck = [
-    "pubnub"
-  ];
+  pythonImportsCheck = [ "pubnub" ];
 
   meta = with lib; {
     description = "Python-based APIs for PubNub";

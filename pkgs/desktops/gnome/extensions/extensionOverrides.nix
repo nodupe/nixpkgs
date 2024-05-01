@@ -23,7 +23,6 @@
 , vte
 , wrapGAppsHook
 , xdg-utils
-, xprop
 }:
 let
   # Helper method to reduce redundancy
@@ -50,8 +49,8 @@ super: lib.trivial.pipe super [
     nativeBuildInputs = [ gobject-introspection wrapGAppsHook ];
     buildInputs = [ vte ];
     postFixup = ''
+      substituteInPlace "$out/share/gnome-shell/extensions/ddterm@amezin.github.com/bin/com.github.amezin.ddterm" --replace "gjs" "${gjs}/bin/gjs"
       wrapGApp "$out/share/gnome-shell/extensions/ddterm@amezin.github.com/bin/com.github.amezin.ddterm"
-      wrapGApp "$out/share/gnome-shell/extensions/ddterm@amezin.github.com/ddterm/app/dependencies-notification.js"
     '';
   }))
 
@@ -105,10 +104,14 @@ super: lib.trivial.pipe super [
         nautilus_gsettings_path = "${glib.getSchemaPath gnome.nautilus}";
       })
     ];
-    postFixup = ''
-      wrapGApp "$out/share/gnome-shell/extensions/gtk4-ding@smedius.gitlab.com/app/ding.js"
-      wrapGApp "$out/share/gnome-shell/extensions/gtk4-ding@smedius.gitlab.com/app/createThumbnail.js"
-    '';
+  }))
+
+  (patchExtension "mullvadindicator@pobega.github.com" (old: {
+    patches = [
+      # Patch from https://github.com/Pobega/gnome-shell-extension-mullvad-indicator/pull/36
+      # tweaked to drop the Makefile changes to fix application
+      ./extensionOverridesPatches/mullvadindicator_at_pobega.github.com.patch
+    ];
   }))
 
   (patchExtension "pano@elhan.io" (old: {
@@ -118,6 +121,16 @@ super: lib.trivial.pipe super [
         inherit gsound libgda;
       })
     ];
+  }))
+
+  (patchExtension "system-monitor-next@paradoxxx.zero.gmail.com" (old: {
+    patches = [
+      (substituteAll {
+        src = ./extensionOverridesPatches/system-monitor-next_at_paradoxxx.zero.gmail.com.patch;
+        gtop_path = "${libgtop}/lib/girepository-1.0";
+      })
+    ];
+    meta.maintainers = with lib.maintainers; [ andersk ];
   }))
 
   (patchExtension "tophat@fflewddur.github.io" (old: {
@@ -136,12 +149,6 @@ super: lib.trivial.pipe super [
         gtop_path = "${libgtop}/lib/girepository-1.0";
       })
     ];
-  }))
-
-  (patchExtension "unite@hardpixel.eu" (old: {
-    buildInputs = [ xprop ];
-
-    meta.maintainers = with lib.maintainers; [ rhoriguchi ];
   }))
 
   (patchExtension "x11gestures@joseexposito.github.io" (old: {

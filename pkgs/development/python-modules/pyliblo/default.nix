@@ -4,12 +4,13 @@
 , isPyPy
 , pythonAtLeast
 , liblo
-, cython
+, cython_0
 }:
 
 buildPythonPackage rec {
   pname = "pyliblo";
   version = "0.10.0";
+  format = "setuptools";
   disabled = isPyPy;
 
   src = fetchurl {
@@ -24,7 +25,9 @@ buildPythonPackage rec {
     })
   ];
 
-  buildInputs = [ liblo cython ];
+  build-system = [ cython_0 ];
+
+  buildInputs = [ liblo ];
 
   meta = with lib; {
     homepage = "https://das.nasophon.de/pyliblo/";

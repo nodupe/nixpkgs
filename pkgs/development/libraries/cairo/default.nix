@@ -57,7 +57,7 @@ in {
     "-Dspectre=disabled"
 
     (lib.mesonEnable "glib" gobjectSupport)
-    (lib.mesonEnable "tests" finalAttrs.doCheck)
+    (lib.mesonEnable "tests" finalAttrs.finalPackage.doCheck)
     (lib.mesonEnable "xlib" x11Support)
     (lib.mesonEnable "xcb" xcbSupport)
   ] ++ lib.optionals (!stdenv.buildPlatform.canExecute stdenv.hostPlatform) [
@@ -93,6 +93,7 @@ in {
 
   meta = with lib; {
     description = "A 2D graphics library with support for multiple output devices";
+    mainProgram = "cairo-trace";
     longDescription = ''
       Cairo is a 2D graphics library with support for multiple output
       devices.  Currently supported output targets include the X

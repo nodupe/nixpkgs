@@ -2,7 +2,7 @@
 , rustPlatform
 , fetchFromGitHub
 , pkg-config
-, libgit2_1_5
+, libgit2
 , openssl
 , zlib
 , stdenv
@@ -10,7 +10,7 @@
 }:
 
 let
-  version = "5.12.175";
+  version = "5.12.198";
 in
 rustPlatform.buildRustPackage {
   pname = "git-mit";
@@ -20,20 +20,24 @@ rustPlatform.buildRustPackage {
     owner = "PurpleBooth";
     repo = "git-mit";
     rev = "v${version}";
-    hash = "sha256-c026r3F/oNk/DyEwHb/1kSL99bqmYp7mqOdsWbB7Njo=";
+    hash = "sha256-4tWgIwDmGZhMFTVT5VzmGj69zV8FGTV0yBHUy5Iu1Xw=";
   };
 
-  cargoHash = "sha256-QpmgGonDy3Pkx2i5X3ZxmBXqupOoESoFMIBorFeqam4=";
+  cargoHash = "sha256-vKiCKcyB1Q2CNA4HpE8dc5gh+nlrz0VERIMaTGlDH5Y=";
 
   nativeBuildInputs = [ pkg-config ];
 
   buildInputs = [
-    libgit2_1_5
+    libgit2
     openssl
     zlib
   ] ++ lib.optionals stdenv.isDarwin [
     darwin.apple_sdk.frameworks.AppKit
   ];
+
+  env = {
+    LIBGIT2_NO_VENDOR = 1;
+  };
 
   meta = with lib; {
     description = "Minimalist set of hooks to aid pairing and link commits to issues";

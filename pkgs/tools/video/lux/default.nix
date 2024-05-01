@@ -7,18 +7,18 @@
 
 buildGoModule rec {
   pname = "lux";
-  version = "0.21.0";
+  version = "0.24.0";
 
   src = fetchFromGitHub {
     owner = "iawia002";
     repo = "lux";
     rev = "v${version}";
-    hash = "sha256-LCYWfF7O8wByCJNDi2BZsI7EU6wJqhcr/sbNOoQ2Src=";
+    hash = "sha256-FwHoxTcEr0u7GPSdl1A8gsx9GCb9QuD/5ospaPOxZrI=";
   };
 
   nativeBuildInputs = [ makeWrapper ];
 
-  vendorHash = "sha256-wW/jrsurmyLcDX+58lp0M+snJ2avEs0HciNZ8BgIqrI=";
+  vendorHash = "sha256-RCZzcycUKqJgwBZZQBD1UEZCZCitpiqNpD51oKm6IvI=";
 
   ldflags = [
     "-s"
@@ -39,5 +39,6 @@ buildGoModule rec {
     changelog = "https://github.com/iawia002/lux/releases/tag/v${version}";
     license = licenses.mit;
     maintainers = with maintainers; [ galaxy ];
+    mainProgram = "lux";
   };
 }

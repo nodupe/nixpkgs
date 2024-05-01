@@ -3,6 +3,7 @@
 buildPythonPackage rec {
   pname = "twitch-python";
   version = "0.0.20";
+  format = "setuptools";
 
   src = fetchPypi {
     inherit pname version;
@@ -25,6 +26,6 @@ buildPythonPackage rec {
     description = "Twitch module for Python";
     homepage = "https://github.com/PetterKraabol/Twitch-Python";
     license = licenses.mit;
-    maintainers = with maintainers; [ marsam ];
+    maintainers = with maintainers; [ ];
   };
 }

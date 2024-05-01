@@ -10,16 +10,16 @@
 
 buildGoModule rec {
   pname = "netmaker";
-  version = "0.21.1";
+  version = "0.24.0";
 
   src = fetchFromGitHub {
     owner = "gravitl";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-LfvO95jqzJzB44JxzB00GubTKJkvK/NR42eGYipirbM=";
+    hash = "sha256-eY0L8dgFTZmkwSXYKCOOnNbFgxTydNoVHEoZBS3oMwM=";
   };
 
-  vendorHash = "sha256-BRgzPH7uiUHcouEw0KNpM5k0/kZMImvI9MFn4ahXIRM=";
+  vendorHash = "sha256-RRSkdDo6N8742YjzORGOTCzqH7WcSraJger8XOryqio=";
 
   inherit subPackages;
 
@@ -40,5 +40,6 @@ buildGoModule rec {
     changelog = "https://github.com/gravitl/netmaker/-/releases/v${version}";
     license = licenses.asl20;
     maintainers = with maintainers; [ urandom qjoly ];
+    mainProgram = "netmaker";
   };
 }

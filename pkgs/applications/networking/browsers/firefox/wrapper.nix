@@ -3,7 +3,7 @@
 , jq, xdg-utils, writeText
 
 ## various stuff that can be plugged in
-, ffmpeg_5, xorg, alsa-lib, libpulseaudio, libcanberra-gtk3, libglvnd, libnotify, opensc
+, ffmpeg, xorg, alsa-lib, libpulseaudio, libcanberra-gtk3, libglvnd, libnotify, opensc
 , gnome/*.gnome-shell*/
 , browserpass, gnome-browser-connector, uget-integrator, plasma5Packages, bukubrow, pipewire
 , tridactyl-native
@@ -18,6 +18,7 @@
 , sndio
 , libjack2
 , speechd
+, removeReferencesTo
 }:
 
 ## configurability of the wrapper itself
@@ -87,7 +88,7 @@ let
 
       libs =   lib.optionals stdenv.isLinux [ udev libva mesa libnotify xorg.libXScrnSaver cups pciutils ]
             ++ lib.optional pipewireSupport pipewire
-            ++ lib.optional ffmpegSupport ffmpeg_5
+            ++ lib.optional ffmpegSupport ffmpeg
             ++ lib.optional gssSupport libkrb5
             ++ lib.optional useGlvnd libglvnd
             ++ lib.optionals (cfg.enableQuakeLive or false)
@@ -238,7 +239,7 @@ let
               };
             }));
 
-      nativeBuildInputs = [ makeWrapper lndir jq ];
+      nativeBuildInputs = [ makeWrapper lndir jq removeReferencesTo ];
       buildInputs = [ browser.gtk3 ];
 
 
@@ -413,9 +414,12 @@ let
       passthru = { unwrapped = browser; };
 
       disallowedRequisites = [ stdenv.cc ];
-
+      postInstall = ''
+        find "$out" -type f -exec remove-references-to -t ${stdenv.cc} '{}' +
+      '';
       meta = browser.meta // {
         inherit (browser.meta) description;
+        mainProgram = launcherName;
         hydraPlatforms = [];
         priority = (browser.meta.priority or 0) - 1; # prefer wrapper over the package
       };

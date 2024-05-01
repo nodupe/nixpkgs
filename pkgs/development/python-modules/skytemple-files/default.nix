@@ -12,6 +12,8 @@
 , tilequant
 , pyyaml
 , pmdsky-debug-py
+, range-typed-integers
+, importlib-resources
 , typing-extensions
 , pythonOlder
 , # optional dependancies for SpriteCollab
@@ -28,13 +30,15 @@
 
 buildPythonPackage rec {
   pname = "skytemple-files";
-  version = "1.5.5";
+  version = "1.6.5";
+  pyproject = true;
 
   src = fetchFromGitHub {
     owner = "SkyTemple";
     repo = pname;
     rev = version;
-    hash = "sha256-PVHI3SuXXH+XpSaBhtSUT5I6wYK3WmwW67nJmPLKdg4=";
+    hash = "sha256-y6VHRfwQNoehp06BoZXuprYtsiGgoNL4rztJw40P4FI=";
+    # Most patches are in submodules
     fetchSubmodules = true;
   };
 
@@ -56,7 +60,9 @@ buildPythonPackage rec {
     tilequant
     pyyaml
     pmdsky-debug-py
+    range-typed-integers
   ] ++ lib.optionals (pythonOlder "3.9") [
+    importlib-resources
     typing-extensions
   ];
 
@@ -81,8 +87,9 @@ buildPythonPackage rec {
   meta = with lib; {
     homepage = "https://github.com/SkyTemple/skytemple-files";
     description = "Python library to edit the ROM of Pokémon Mystery Dungeon Explorers of Sky";
+    mainProgram = "skytemple_export_maps";
     license = licenses.gpl3Plus;
-    maintainers = with maintainers; [ xfix marius851000 ];
+    maintainers = with maintainers; [ marius851000 ];
     broken = stdenv.isDarwin; # pyobjc is missing
   };
 }

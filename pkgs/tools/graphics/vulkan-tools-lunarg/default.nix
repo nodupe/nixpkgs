@@ -21,20 +21,21 @@
 , vulkan-loader
 , vulkan-utility-libraries
 , writeText
+, libsForQt5
 }:
 
 stdenv.mkDerivation rec {
   pname = "vulkan-tools-lunarg";
-  version = "1.3.268.0";
+  version = "1.3.280.0";
 
   src = fetchFromGitHub {
    owner = "LunarG";
    repo = "VulkanTools";
    rev = "vulkan-sdk-${version}";
-   hash = "sha256-2ZUD+RBsl35QV3250JOPCIoJb4sJcBsiRE4SZaS6ROs=";
+   hash = "sha256-tp5b7/1lDF9oe/AsiqhVCvYY8p9UguGAgIkLS/hIhfQ=";
  };
 
-  nativeBuildInputs = [ cmake python3 jq which pkg-config ];
+  nativeBuildInputs = [ cmake python3 jq which pkg-config libsForQt5.qt5.wrapQtAppsHook ];
 
   buildInputs = [
     expat
@@ -51,6 +52,8 @@ stdenv.mkDerivation rec {
     wayland
     xcbutilkeysyms
     xcbutilwm
+    libsForQt5.qt5.qtbase
+    libsForQt5.qt5.qtwayland
   ];
 
   cmakeFlags = [

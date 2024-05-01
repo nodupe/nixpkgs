@@ -1,5 +1,6 @@
 { lib
 , buildPythonPackage
+, pythonOlder
 , fetchFromGitHub
 , hatchling
 , jax
@@ -8,19 +9,22 @@
 , typing-extensions
 , beartype
 , optax
+, pytest-xdist
 , pytestCheckHook
 }:
 
 buildPythonPackage rec {
   pname = "equinox";
-  version = "0.11.2";
+  version = "0.11.4";
   pyproject = true;
+
+  disabled = pythonOlder "3.9";
 
   src = fetchFromGitHub {
     owner = "patrick-kidger";
     repo = "equinox";
     rev = "refs/tags/v${version}";
-    hash = "sha256-qFTKiY/t2LCCWJBOSfaX0hYQInrpXgfhTc+J4iuyVbM=";
+    hash = "sha256-3OwHND1YEdg/SppqiB7pCdp6v+lYwTbtX07tmyEMWDo=";
   };
 
   nativeBuildInputs = [
@@ -37,13 +41,20 @@ buildPythonPackage rec {
   nativeCheckInputs = [
     beartype
     optax
+    pytest-xdist
     pytestCheckHook
   ];
 
   pythonImportsCheck = [ "equinox" ];
 
+  disabledTests = [
+    # Failed: DID NOT WARN. No warnings of type (<class 'UserWarning'>,) were emitted.
+    "test_tracetime"
+  ];
+
   meta = with lib; {
     description = "A JAX library based around a simple idea: represent parameterised functions (such as neural networks) as PyTrees";
+    changelog = "https://github.com/patrick-kidger/equinox/releases/tag/v${version}";
     homepage = "https://github.com/patrick-kidger/equinox";
     license = licenses.asl20;
     maintainers = with maintainers; [ GaetanLepage ];

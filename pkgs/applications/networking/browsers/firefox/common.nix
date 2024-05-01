@@ -21,6 +21,11 @@
 , tests ? []
 }:
 
+let
+  # Rename the variables to prevent infinite recursion
+  requireSigningDefault = requireSigning;
+  allowAddonSideloadDefault = allowAddonSideload;
+in
 
 { lib
 , pkgs
@@ -80,6 +85,10 @@
 
 # optionals
 
+## addon signing/sideloading
+, requireSigning ? requireSigningDefault
+, allowAddonSideload ? allowAddonSideloadDefault
+
 ## debugging
 
 , debugBuild ? false
@@ -112,7 +121,7 @@
 , geolocationSupport ? !privacySupport
 , googleAPISupport ? geolocationSupport
 , mlsAPISupport ? geolocationSupport
-, webrtcSupport ? !privacySupport && !stdenv.hostPlatform.isRiscV
+, webrtcSupport ? !privacySupport
 
 # digital rights managemewnt
 
@@ -174,7 +183,7 @@ let
   # We only link c++ libs here, our compiler wrapper can find wasi libc and crt itself.
   wasiSysRoot = runCommand "wasi-sysroot" {} ''
     mkdir -p $out/lib/wasm32-wasi
-    for lib in ${pkgsCross.wasi32.llvmPackages.libcxx}/lib/* ${pkgsCross.wasi32.llvmPackages.libcxxabi}/lib/*; do
+    for lib in ${pkgsCross.wasi32.llvmPackages.libcxx}/lib/*; do
       ln -s $lib $out/lib/wasm32-wasi
     done
   '';
@@ -225,36 +234,29 @@ buildStdenv.mkDerivation {
     "profilingPhase"
   ];
 
-  patches = lib.optionals (lib.versionAtLeast version "112.0" && lib.versionOlder version "113.0") [
+  patches = lib.optionals (lib.versionAtLeast version "120" && lib.versionOlder version "122") [
+    # dbus cflags regression fix
+    # https://bugzilla.mozilla.org/show_bug.cgi?id=1864083
     (fetchpatch {
-      # Crash when desktop scaling does not divide window scale on Wayland
-      # https://bugzilla.mozilla.org/show_bug.cgi?id=1803016
-      name = "mozbz1803016.patch";
-      url = "https://hg.mozilla.org/mozilla-central/raw-rev/1068e0955cfb";
-      hash = "sha256-iPqmofsmgvlFNm+mqVPbdgMKmP68ANuzYu+PzfCpoNA=";
-    })
-  ] ++ lib.optionals (lib.versionOlder version "114.0") [
-    # https://bugzilla.mozilla.org/show_bug.cgi?id=1830040
-    # https://hg.mozilla.org/mozilla-central/rev/cddb250a28d8
-    (fetchpatch {
-      url = "https://git.alpinelinux.org/aports/plain/community/firefox/avoid-redefinition.patch?id=2f620d205ed0f9072bbd7714b5ec1b7bf6911c12";
-      hash = "sha256-fLUYaJwhrC/wF24HkuWn2PHqz7LlAaIZ1HYjRDB2w9A=";
+      url = "https://hg.mozilla.org/mozilla-central/raw-rev/f1f5f98290b3";
+      hash = "sha256-5PzVNJvPNX8irCqj1H38SFDydNJZuBHx167e1TQehaI=";
     })
   ]
-  ++ lib.optionals (lib.versionOlder version "102.13") [
-    # cherry-pick bindgen change to fix build with clang 16
-    (fetchpatch {
-      url = "https://git.alpinelinux.org/aports/plain/community/firefox-esr/bindgen.patch?id=4c4b0c01c808657fffc5b796c56108c57301b28f";
-      hash = "sha256-lTvgT358M4M2vedZ+A6xSKsBYhSN+McdmEeR9t75MLU=";
-    })
-    # cherry-pick mp4parse change fixing build with Rust 1.70+
-    # original change: https://github.com/mozilla/mp4parse-rust/commit/8b5b652d38e007e736bb442ccd5aa5ed699db100
-    # vendored to update checksums
-    ./mp4parse-rust-170.patch
-  ]
-  ++ lib.optional (lib.versionOlder version "111") ./env_var_for_system_dir-ff86.patch
   ++ lib.optional (lib.versionAtLeast version "111") ./env_var_for_system_dir-ff111.patch
-  ++ lib.optional (lib.versionAtLeast version "96") ./no-buildconfig-ffx96.patch
+  ++ lib.optional (lib.versionAtLeast version "96" && lib.versionOlder version "121") ./no-buildconfig-ffx96.patch
+  ++ lib.optional (lib.versionAtLeast version "121") ./no-buildconfig-ffx121.patch
+  ++ lib.optionals (lib.versionAtLeast version "120" && lib.versionOlder version "120.0.1") [
+    (fetchpatch {
+      # Do not crash on systems without an expected statically assumed page size.
+      # https://phabricator.services.mozilla.com/D194458
+      name = "mozbz1866025.patch";
+      url = "https://hg.mozilla.org/mozilla-central/raw-rev/42c80086da4468f407648f2f57a7222aab2e9951";
+      hash = "sha256-cWOyvjIPUU1tavPRqg61xJ53XE4EJTdsFzadfVxyTyM=";
+    })
+  ]
+  ++ lib.optionals (lib.versionAtLeast version "122" && lib.versionOlder version "123") [
+    ./122.0-libvpx-mozbz1875201.patch
+  ]
   ++ extraPatches;
 
   postPatch = ''
@@ -296,15 +298,15 @@ buildStdenv.mkDerivation {
   setOutputFlags = false; # `./mach configure` doesn't understand `--*dir=` flags.
 
   preConfigure = ''
-    # remove distributed configuration files
-    rm -f configure js/src/configure .mozconfig*
-
     # Runs autoconf through ./mach configure in configurePhase
     configureScript="$(realpath ./mach) configure"
 
+    # Set reproducible build date; https://bugzilla.mozilla.org/show_bug.cgi?id=885777#c21
+    export MOZ_BUILD_DATE=$(head -n1 sourcestamp.txt)
+
     # Set predictable directories for build and state
-    export MOZ_OBJDIR=$(pwd)/mozobj
-    export MOZBUILD_STATE_PATH=$(pwd)/mozbuild
+    export MOZ_OBJDIR=$(pwd)/objdir
+    export MOZBUILD_STATE_PATH=$TMPDIR/mozbuild
 
     # Don't try to send libnotify notifications during build
     export MOZ_NOSPAM=1
@@ -330,11 +332,9 @@ buildStdenv.mkDerivation {
           unset 'configureFlagsArray[i]'
         fi
       done
-      configureFlagsArray+=(
-        "--enable-profile-use=cross"
-        "--with-pgo-profile-path="$TMPDIR/merged.profdata""
-        "--with-pgo-jarlog="$TMPDIR/jarlog""
-      )
+      appendToVar configureFlags --enable-profile-use=cross
+      appendToVar configureFlags --with-pgo-profile-path=$TMPDIR/merged.profdata
+      appendToVar configureFlags --with-pgo-jarlog=$TMPDIR/jarlog
       ${lib.optionalString stdenv.hostPlatform.isMusl ''
         LDFLAGS="$OLD_LDFLAGS"
         unset OLD_LDFLAGS
@@ -350,7 +350,7 @@ buildStdenv.mkDerivation {
       # since the profiling build has not been installed to $out
       ''
         OLD_LDFLAGS="$LDFLAGS"
-        LDFLAGS="-Wl,-rpath,$(pwd)/mozobj/dist/${binaryName}"
+        LDFLAGS="-Wl,-rpath,$(pwd)/objdir/dist/${binaryName}"
       ''}
     fi
   '' + lib.optionalString googleAPISupport ''
@@ -507,10 +507,7 @@ buildStdenv.mkDerivation {
   '';
 
   preBuild = ''
-    cd mozobj
-  '' + lib.optionalString (lib.versionAtLeast version "120") ''
-    # https://bugzilla.mozilla.org/show_bug.cgi?id=1864083
-    export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE $(pkg-config dbus-1 --cflags)"
+    cd objdir
   '';
 
   postBuild = ''
@@ -535,9 +532,9 @@ buildStdenv.mkDerivation {
   preInstall = lib.optionalString crashreporterSupport ''
     ./mach buildsymbols
     mkdir -p $symbols/
-    cp mozobj/dist/*.crashreporter-symbols.zip $symbols/
+    cp objdir/dist/*.crashreporter-symbols.zip $symbols/
   '' + ''
-    cd mozobj
+    cd objdir
   '';
 
   postInstall = ''
@@ -568,6 +565,7 @@ buildStdenv.mkDerivation {
     inherit updateScript;
     inherit alsaSupport;
     inherit binaryName;
+    inherit requireSigning allowAddonSideload;
     inherit jackSupport;
     inherit pipewireSupport;
     inherit sndioSupport;

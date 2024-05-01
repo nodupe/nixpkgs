@@ -17,13 +17,13 @@ in
 
 rustPlatform.buildRustPackage rec {
   pname = "difftastic";
-  version = "0.52.0";
+  version = "0.56.1";
 
   src = fetchFromGitHub {
     owner = "wilfred";
     repo = pname;
     rev = version;
-    hash = "sha256-ve5oUvclHGgw56UEIuEQ0tSdzad94MfL6qzc2hoB0dw=";
+    hash = "sha256-XQzsLowHtgXIKfUWx1Sj1D0F8scb7fNp33Cwfh5XvJI=";
   };
 
   cargoLock = {
@@ -33,10 +33,10 @@ rustPlatform.buildRustPackage rec {
     };
   };
 
-  # Work around https://github.com/NixOS/nixpkgs/issues/166205.
-  env = lib.optionalAttrs stdenv.cc.isClang {
-    NIX_LDFLAGS = "-l${stdenv.cc.libcxx.cxxabi.libName}";
-  };
+  # skip flaky tests
+  checkFlags = [
+    "--skip=options::tests::test_detect_display_width"
+  ];
 
   postPatch = ''
     patch -d $cargoDepsCopy/libmimalloc-sys-0.1.24/c_src/mimalloc \

@@ -19,6 +19,7 @@
 , unzip
 , shared-mime-info
 , libgweather
+, libjxl
 , librsvg
 , webp-pixbuf-loader
 , geoclue2
@@ -65,15 +66,15 @@
 let
   pythonEnv = python3.withPackages (ps: with ps; [ pygobject3 ]);
 in
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "gnome-shell";
-  version = "45.1";
+  version = "45.5";
 
   outputs = [ "out" "devdoc" ];
 
   src = fetchurl {
-    url = "mirror://gnome/sources/gnome-shell/${lib.versions.major version}/${pname}-${version}.tar.xz";
-    sha256 = "FfykvWEpqLP5kBl/vR7ljXS2QVEK+q8Igqf6NmNPxfI=";
+    url = "mirror://gnome/sources/gnome-shell/${lib.versions.major finalAttrs.version}/gnome-shell-${finalAttrs.version}.tar.xz";
+    sha256 = "sha256-vVw9PQKNRyM+QgUiPwrAKsmpc7aZvCd0OQlNQaeNarA=";
   };
 
   patches = [
@@ -188,10 +189,11 @@ stdenv.mkDerivation rec {
   '';
 
   postInstall = ''
-    # Pull in WebP support for gnome-backgrounds.
+    # Pull in WebP and JXL support for gnome-backgrounds.
     # In postInstall to run before gappsWrapperArgsHook.
     export GDK_PIXBUF_MODULE_FILE="${gnome._gdkPixbufCacheBuilder_DO_NOT_USE {
       extraLoaders = [
+        libjxl
         librsvg
         webp-pixbuf-loader
       ];
@@ -231,4 +233,4 @@ stdenv.mkDerivation rec {
     platforms = platforms.linux;
   };
 
-}
+})

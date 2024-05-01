@@ -5,32 +5,41 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "ldeep";
-  version = "1.0.48";
-  format = "setuptools";
+  version = "1.0.53";
+  pyproject = true;
 
   src = fetchFromGitHub {
     owner = "franc-pentest";
     repo = "ldeep";
     rev = "refs/tags/${version}";
-    hash = "sha256-E/gqt8+eD/syOHczq9k07YIq39W84vC5VFScMxxj4uI=";
+    hash = "sha256-67jVpzvdjEcjFmTRE2YjPr4AO1iN+PakwoKcjvimt8g=";
   };
 
-  nativeBuildInputs = with python3.pkgs; [
-    cython
+  pythonRelaxDeps = [
+    "cryptography"
   ];
 
-  propagatedBuildInputs = with python3.pkgs; [
+  build-system = with python3.pkgs; [
+    cython
+    pythonRelaxDepsHook
+    setuptools
+  ];
+
+  dependencies = with python3.pkgs; [
     commandparse
     cryptography
     dnspython
+    gssapi
     ldap3
+    oscrypto
+    pycryptodome
     pycryptodomex
     six
     termcolor
     tqdm
   ];
 
-  # no tests are present
+  # Project has no tests
   doCheck = false;
 
   pythonImportsCheck = [
@@ -43,5 +52,6 @@ python3.pkgs.buildPythonApplication rec {
     changelog = "https://github.com/franc-pentest/ldeep/releases/tag/${version}";
     license = with licenses; [ mit ];
     maintainers = with maintainers; [ fab ];
+    mainProgram = "ldeep";
   };
 }

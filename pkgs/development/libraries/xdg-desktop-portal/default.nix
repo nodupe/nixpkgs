@@ -31,7 +31,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "xdg-desktop-portal";
-  version = "1.18.1";
+  version = "1.18.4";
 
   outputs = [ "out" "installedTests" ];
 
@@ -39,7 +39,7 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "flatpak";
     repo = "xdg-desktop-portal";
     rev = finalAttrs.version;
-    sha256 = "sha256-S4I578gX1ONbixWGcQLY3WqzACoVfAtLuOFBhh36hFY=";
+    hash = "sha256-o+aO7uGewDPrtgOgmp/CE2uiqiBLyo07pVCFrtlORFQ=";
   };
 
   patches = [
@@ -54,11 +54,10 @@ stdenv.mkDerivation (finalAttrs: {
     # Allow installing installed tests to a separate output.
     ./installed-tests-path.patch
 
-    # `XDG_DESKTOP_PORTAL_DIR` originally was used for upstream tests. But we are making use
-    # of this in the NixOS module, this actually blocks any configs from being loaded since
-    # configs are not expected to be placed in a portal implementation or even under the
-    # `share/xdg-desktop-portal/portals/` path.
-    ./separate-env-for-portal-config.patch
+    # Look for portal definitions under path from `NIX_XDG_DESKTOP_PORTAL_DIR` environment variable.
+    # While upstream has `XDG_DESKTOP_PORTAL_DIR`, it is meant for tests and actually blocks
+    # any configs from being loaded from anywhere else.
+    ./nix-pkgdatadir-env.patch
   ];
 
   nativeBuildInputs = [
@@ -109,7 +108,7 @@ stdenv.mkDerivation (finalAttrs: {
     "-Dinstalled-tests=true"
     "-Dinstalled_test_prefix=${placeholder "installedTests"}"
   ] ++ lib.optionals (!enableGeoLocation) [
-    "-Dgeoclue=false"
+    "-Dgeoclue=disabled"
   ];
 
   doCheck = true;
@@ -117,6 +116,12 @@ stdenv.mkDerivation (finalAttrs: {
   preCheck = ''
     # For test_trash_file
     export HOME=$(mktemp -d)
+
+    # Upstream disables a few tests in CI upstream as they are known to
+    # be flaky. Let's disable those downstream as hydra exhibits similar
+    # flakes:
+    #   https://github.com/NixOS/nixpkgs/pull/270085#issuecomment-1840053951
+    export TEST_IN_CI=1
   '';
 
   passthru = {

@@ -5,12 +5,12 @@
 }:
 
 let
-  version = "6.6.0";
+  version = "6.7.5";
   pname = "timeular";
 
   src = fetchurl {
     url = "https://s3.amazonaws.com/timeular-desktop-packages/linux/production/Timeular-${version}.AppImage";
-    sha256 = "sha256-RmWRNKy2w3BM/ipQyFpkNC3+XXsJXjN6VYWNo8OKpy0=";
+    hash = "sha256-b/I34f8fGgPr4+fZJ+2cb+Xi/AvotxNHYg7IaLTByPk=";
   };
 
   appimageContents = appimageTools.extractType2 {
@@ -24,7 +24,6 @@ in appimageTools.wrapType2 rec {
   ];
 
   extraInstallCommands = ''
-    mv $out/bin/{${pname}-${version},${pname}}
     install -m 444 -D ${appimageContents}/timeular.desktop $out/share/applications/timeular.desktop
     install -m 444 -D ${appimageContents}/timeular.png $out/share/icons/hicolor/512x512/apps/timeular.png
     substituteInPlace $out/share/applications/timeular.desktop \
@@ -42,5 +41,6 @@ in appimageTools.wrapType2 rec {
     license = licenses.unfree;
     maintainers = with maintainers; [ ktor ];
     platforms = [ "x86_64-linux" ];
+    mainProgram = "timeular";
   };
 }

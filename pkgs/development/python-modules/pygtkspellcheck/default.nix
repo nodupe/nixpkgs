@@ -10,12 +10,12 @@
 
 buildPythonPackage rec {
   pname = "pygtkspellcheck";
-  version = "5.0.2";
+  version = "5.0.3";
   format = "pyproject";
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-rWV/ghoMWHOAmT8ablwOjJSEhtvPqT/UdoZBXL5Nj0s=";
+    hash = "sha256-NzaxRXU3BTIcRO9nowEak+Vk+XYw8nBCsTl//e/qg6w=";
   };
 
   nativeBuildInputs = [
@@ -39,6 +39,6 @@ buildPythonPackage rec {
     homepage = "https://github.com/koehlma/pygtkspellcheck";
     description = "A Python spell-checking library for GtkTextViews based on Enchant";
     license = licenses.gpl3Plus;
-    maintainers = with maintainers; [ xfix ];
+    maintainers = with maintainers; [ ];
   };
 }

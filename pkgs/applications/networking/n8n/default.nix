@@ -10,6 +10,7 @@ nodePackages.n8n.override {
   nativeBuildInputs = [
     pkgs.nodePackages.node-pre-gyp
     pkgs.which
+    pkgs.xcbuild
   ];
 
   buildInputs = [
@@ -30,6 +31,9 @@ nodePackages.n8n.override {
   # makes libmongocrypt bindings not look for static libraries in completely wrong places
   BUILD_TYPE = "dynamic";
 
+  # Disable NAPI_EXPERIMENTAL to allow to build with Node.js≥18.20.0.
+  NIX_CFLAGS_COMPILE = "-DNODE_API_EXPERIMENTAL_NOGC_ENV_OPT_OUT";
+
   dontNpmInstall = true;
 
   passthru = {
@@ -41,5 +45,6 @@ nodePackages.n8n.override {
     description = "Free and source-available fair-code licensed workflow automation tool. Easily automate tasks across different services.";
     maintainers = with maintainers; [ freezeboy k900 ];
     license = licenses.sustainableUse;
+    mainProgram = "n8n";
   };
 }

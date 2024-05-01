@@ -23,6 +23,7 @@
 buildPythonPackage rec {
   pname = "pgcli";
   version = "4.0.1";
+  format = "setuptools";
 
   src = fetchPypi {
     inherit pname version;
@@ -50,6 +51,7 @@ buildPythonPackage rec {
 
   meta = with lib; {
     description = "Command-line interface for PostgreSQL";
+    mainProgram = "pgcli";
     longDescription = ''
       Rich command-line interface for PostgreSQL with auto-completion and
       syntax highlighting.

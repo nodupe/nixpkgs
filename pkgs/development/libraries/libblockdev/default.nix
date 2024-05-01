@@ -31,13 +31,13 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "libblockdev";
-  version = "3.0.3";
+  version = "3.1.1";
 
   src = fetchFromGitHub {
     owner = "storaged-project";
     repo = "libblockdev";
     rev = "${finalAttrs.version}-1";
-    hash = "sha256-vQ+JHMhfCNb5PALGL9FchRYPHGj+6oQpRfmmGS0ZczI=";
+    hash = "sha256-WCMedMkaMMhZbB3iJu3c+CTT3AvOjzOSYP45J+NQEDQ=";
   };
 
   outputs = [ "out" "dev" "devdoc" ];

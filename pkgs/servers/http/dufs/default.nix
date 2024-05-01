@@ -8,16 +8,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "dufs";
-  version = "0.37.1";
+  version = "0.40.0";
 
   src = fetchFromGitHub {
     owner = "sigoden";
     repo = "dufs";
     rev = "v${version}";
-    hash = "sha256-Q5t3FUT/ukGME+ZJXpLWnii2XCPrBVDAlbjW8FrpOZs=";
+    hash = "sha256-BoFoF7V6bTQiJ+afGnivviU/s2ikOxAX06s+AwRxo8Q=";
   };
 
-  cargoHash = "sha256-6ybYfeufHr3ulTbKe27CDS5m1mCluPwS/5GYemYXat8=";
+  cargoHash = "sha256-B0K/lco7suYM0/02LaDbeqyt4zyiwoeBxhmUPsVTvkw=";
 
   nativeBuildInputs = [ installShellFiles ];
 
@@ -42,6 +42,7 @@ rustPlatform.buildRustPackage rec {
 
   meta = with lib; {
     description = "A file server that supports static serving, uploading, searching, accessing control, webdav";
+    mainProgram = "dufs";
     homepage = "https://github.com/sigoden/dufs";
     changelog = "https://github.com/sigoden/dufs/blob/${src.rev}/CHANGELOG.md";
     license = with licenses; [ asl20 /* or */ mit ];

@@ -9,40 +9,43 @@
 , pontos
 , pytestCheckHook
 , pythonOlder
+, typing-extensions
 }:
 
 buildPythonPackage rec {
   pname = "python-gvm";
-  version = "23.11.0";
-  format = "pyproject";
+  version = "24.3.0";
+  pyproject = true;
 
-  disabled = pythonOlder "3.7";
+  disabled = pythonOlder "3.9";
 
   src = fetchFromGitHub {
     owner = "greenbone";
-    repo = pname;
+    repo = "python-gvm";
     rev = "refs/tags/v${version}";
-    hash = "sha256-7HneedqHbNB9ZYFUCCQ/puLtA1QlIkTKqji0py9hwBE=";
+    hash = "sha256-GIEsP8+RJMIehsBbZWpIRXCdqxm042lPbYTHY7/fknM=";
   };
 
-  nativeBuildInputs = [
+  build-system = [
     poetry-core
   ];
 
-  propagatedBuildInputs = [
+  dependencies = [
     defusedxml
     lxml
     paramiko
-    pontos
+    typing-extensions
   ];
 
   nativeCheckInputs = [
+    pontos
     pytestCheckHook
   ];
 
   disabledTests = [
     # No running SSH available
     "test_connect_error"
+    "test_feed_xml_error"
   ] ++ lib.optionals stdenv.isDarwin [
     "test_feed_xml_error"
   ];

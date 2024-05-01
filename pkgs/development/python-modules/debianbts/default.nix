@@ -2,8 +2,6 @@
 , buildPythonPackage
 , fetchPypi
 , pysimplesoap
-, pytestCheckHook
-, pytest-xdist
 , pythonOlder
 , setuptools
 }:
@@ -41,6 +39,7 @@ buildPythonPackage rec {
 
   meta = with lib; {
     description = "Python interface to Debian's Bug Tracking System";
+    mainProgram = "debianbts";
     homepage = "https://github.com/venthur/python-debianbts";
     downloadPage = "https://pypi.org/project/python-debianbts/";
     changelog = "https://github.com/venthur/python-debianbts/blob/${version}/CHANGELOG.md";

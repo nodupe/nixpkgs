@@ -1,6 +1,7 @@
 { lib
 , stdenv
 , fetchurl
+, fetchpatch
 , autoreconfHook
 , disarchive
 , git
@@ -28,6 +29,10 @@
 , bzip2
 , libgcrypt
 , sqlite
+
+, stateDir ? "/var"
+, storeDir ? "/gnu/store"
+, confDir ? "/etc"
 }:
 
 stdenv.mkDerivation rec {
@@ -38,6 +43,19 @@ stdenv.mkDerivation rec {
     url = "mirror://gnu/guix/guix-${version}.tar.gz";
     hash = "sha256-Q8dpy/Yy7wVEmsH6SMG6FSwzSUxqvH5HE3u6eyFJ+KQ=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "CVE-2024-27297_1.patch";
+      url = "https://git.savannah.gnu.org/cgit/guix.git/patch/?id=8f4ffb3fae133bb21d7991e97c2f19a7108b1143";
+      hash = "sha256-xKo1h2uckC2pYHt+memekagfL6dWcF8gOnTOOW/wJUU=";
+    })
+    (fetchpatch {
+      name = "CVE-2024-27297_2.patch";
+      url = "https://git.savannah.gnu.org/cgit/guix.git/patch/?id=ff1251de0bc327ec478fc66a562430fbf35aef42";
+      hash = "sha256-f4KWDVrvO/oI+4SCUHU5GandkGtHrlaM1BWygM/Qlao=";
+    })
+  ];
 
   postPatch = ''
     sed nix/local.mk -i -E \
@@ -100,8 +118,9 @@ stdenv.mkDerivation rec {
   ];
 
   configureFlags = [
-    "--localstatedir=/var"
-    "--sysconfdir=/etc"
+    "--with-store-dir=${storeDir}"
+    "--localstatedir=${stateDir}"
+    "--sysconfdir=${confDir}"
     "--with-bash-completion-dir=$(out)/etc/bash_completion.d"
   ];
 
@@ -132,7 +151,7 @@ stdenv.mkDerivation rec {
     homepage = "http://www.gnu.org/software/guix";
     license = licenses.gpl3Plus;
     mainProgram = "guix";
-    maintainers = with maintainers; [ cafkafk ];
+    maintainers = with maintainers; [ cafkafk foo-dogsquared ];
     platforms = platforms.linux;
   };
 }

@@ -7,15 +7,15 @@ let
 in
 {
   options.programs.streamdeck-ui = {
-    enable = mkEnableOption (lib.mdDoc "streamdeck-ui");
+    enable = mkEnableOption "streamdeck-ui";
 
     autoStart = mkOption {
       default = true;
       type = types.bool;
-      description = lib.mdDoc "Whether streamdeck-ui should be started automatically.";
+      description = "Whether streamdeck-ui should be started automatically.";
     };
 
-    package = mkPackageOptionMD pkgs "streamdeck-ui" {
+    package = mkPackageOption pkgs "streamdeck-ui" {
       default = [ "streamdeck-ui" ];
     };
 

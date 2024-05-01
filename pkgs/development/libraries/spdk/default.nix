@@ -11,9 +11,10 @@
 , openssl
 , pkg-config
 , zlib
+, zstd
 , libpcap
 , libnl
-, libelf
+, elfutils
 , jansson
 , ensureNewerSourcesForZipFilesHook
 }:
@@ -44,7 +45,7 @@ stdenv.mkDerivation rec {
     jansson
     libaio
     libbsd
-    libelf
+    elfutils
     libuuid
     libpcap
     libnl
@@ -52,11 +53,13 @@ stdenv.mkDerivation rec {
     openssl
     ncurses
     zlib
+    zstd
   ];
 
   patches = [
     # https://review.spdk.io/gerrit/c/spdk/spdk/+/20394
     ./setuptools.patch
+    ./0001-fix-setuptools-installation.patch
   ];
 
   postPatch = ''
@@ -67,8 +70,12 @@ stdenv.mkDerivation rec {
 
   configureFlags = [
     "--with-dpdk=${dpdk}"
-    "--pydir=${placeholder "out"}/${python3.sitePackages}"
+    "--pydir=${placeholder "out"}"
   ];
+
+  postCheck = ''
+    python3 -m spdk
+  '';
 
   env.NIX_CFLAGS_COMPILE = "-mssse3"; # Necessary to compile.
   # otherwise does not find strncpy when compiling

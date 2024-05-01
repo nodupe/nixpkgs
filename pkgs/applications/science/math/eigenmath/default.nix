@@ -7,13 +7,13 @@
 
 stdenv.mkDerivation rec {
   pname = "eigenmath";
-  version = "unstable-2023-11-17";
+  version = "0-unstable-2024-04-26";
 
   src = fetchFromGitHub {
     owner = "georgeweigt";
     repo = pname;
-    rev = "b0d822f10243ad5b1c88efb5a82b43a0bbf1bfbc";
-    hash = "sha256-eJ/EmzV5UZGxwZNIna/XXkYY+vkLc610KcywBFPRfyM=";
+    rev = "14a55ff60d078b752033b4ae29d332b04b6e8912";
+    hash = "sha256-p7wcLmssTqs3LCkZWB9rhCXEc4IVgZJNBvRhS51oH5E=";
   };
 
   checkPhase = let emulator = stdenv.hostPlatform.emulator buildPackages; in ''
@@ -40,6 +40,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib;{
     description = "Computer algebra system written in C";
+    mainProgram = "eigenmath";
     homepage = "https://georgeweigt.github.io";
     license = licenses.bsd2;
     maintainers = with maintainers; [ nickcao ];

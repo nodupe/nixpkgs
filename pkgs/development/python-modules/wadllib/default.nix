@@ -9,6 +9,7 @@
 buildPythonPackage rec {
   pname = "wadllib";
   version = "1.3.6";
+  format = "setuptools";
 
   src = fetchPypi {
     inherit pname version;
@@ -23,6 +24,6 @@ buildPythonPackage rec {
     description = "Navigate HTTP resources using WADL files as guides";
     homepage = "https://launchpad.net/wadllib";
     license = licenses.lgpl3;
-    maintainers = [ maintainers.marsam ];
+    maintainers = [ ];
   };
 }

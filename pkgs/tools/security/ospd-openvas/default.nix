@@ -5,14 +5,14 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "ospd-openvas";
-  version = "22.6.1";
-  format = "pyproject";
+  version = "22.7.1";
+  pyproject = true;
 
   src = fetchFromGitHub {
     owner = "greenbone";
     repo = "ospd-openvas";
     rev = "refs/tags/v${version}";
-    hash = "sha256-Qm6TTS9yLqQHXsz19yJR3Ccyc+syxkrTJ7upSTXdXSE=";
+    hash = "sha256-bFZTwNITDG5OpoWD7F1Ad6BQFpY4Q5CGUGbYy7rTuc0=";
   };
 
   pythonRelaxDeps = [
@@ -20,8 +20,11 @@ python3.pkgs.buildPythonApplication rec {
     "python-gnupg"
   ];
 
-  nativeBuildInputs = with python3.pkgs; [
+  build-system = with python3.pkgs; [
     poetry-core
+  ];
+
+  nativeBuildInputs = with python3.pkgs; [
     pythonRelaxDepsHook
   ];
 

@@ -42,13 +42,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "polybar";
-  version = "3.7.0";
+  version = "3.7.1";
 
   src = fetchFromGitHub {
     owner = "polybar";
     repo = "polybar";
     rev = finalAttrs.version;
-    hash = "sha256-Z1rL9WvEZHr5M03s9KCJ6O6rNuaK7PpwUDaatYuCocI=";
+    hash = "sha256-DX648jY1vewl3ImK84gF6/vtcSCg3wtgq6Ie3fCwZoA=";
     fetchSubmodules = true;
   };
 
@@ -102,7 +102,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   meta = with lib; {
     homepage = "https://polybar.github.io/";
-    changelog = "https://github.com/polybar/polybar/releases/tag/${version}";
+    changelog = "https://github.com/polybar/polybar/releases/tag/${finalAttrs.version}";
     description = "A fast and easy-to-use tool for creating status bars";
     longDescription = ''
       Polybar aims to help users build beautiful and highly customizable
@@ -111,6 +111,7 @@ stdenv.mkDerivation (finalAttrs: {
     '';
     license = licenses.mit;
     maintainers = with maintainers; [ afldcr Br1ght0ne moni ckie ];
+    mainProgram = "polybar";
     platforms = platforms.linux;
   };
 })

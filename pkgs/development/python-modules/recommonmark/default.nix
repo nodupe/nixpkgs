@@ -11,6 +11,7 @@
 buildPythonPackage rec {
   pname = "recommonmark";
   version = "0.7.1";
+  format = "setuptools";
 
   src = fetchFromGitHub {
     owner = "rtfd";
@@ -37,6 +38,5 @@ buildPythonPackage rec {
     description = "A docutils-compatibility bridge to CommonMark";
     homepage = "https://github.com/rtfd/recommonmark";
     license = lib.licenses.mit;
-    maintainers = with lib.maintainers; [ fridh ];
   };
 }

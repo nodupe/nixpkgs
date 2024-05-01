@@ -27,14 +27,14 @@
 
 stdenv.mkDerivation rec {
   pname = "gzdoom";
-  version = "4.11.3";
+  version = "4.12.1";
 
   src = fetchFromGitHub {
     owner = "ZDoom";
     repo = "gzdoom";
     rev = "g${version}";
     fetchSubmodules = true;
-    hash = "sha256-pY+5R3W/9pJGiBoDFkxxpuP0I2ZLb+Q/s5UYU20G748=";
+    hash = "sha256-ityjfxlazt/R9vD+azVGr+w7Sdjlbh+ekbJexkPSF1g=";
   };
 
   outputs = [ "out" "doc" ];
@@ -103,6 +103,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     homepage = "https://github.com/ZDoom/gzdoom";
     description = "Modder-friendly OpenGL and Vulkan source port based on the DOOM engine";
+    mainProgram = "gzdoom";
     longDescription = ''
       GZDoom is a feature centric port for all DOOM engine games, based on
       ZDoom, adding an OpenGL renderer and powerful scripting capabilities.

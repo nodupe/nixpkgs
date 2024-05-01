@@ -1,13 +1,10 @@
-{ callPackage, fetchurl, ... }@_args:
+{ callPackage, ... }@_args:
 
 let
-  base = (callPackage ./generic.nix (_args // {
-    version = "8.3.0RC6";
-    phpSrc = fetchurl {
-      url = "https://downloads.php.net/~eric/php-8.3.0RC6.tar.xz";
-      hash = "sha256-Hntdz+vEkh7EQgnB4IrnG2sQ5bG2uJW7T3a0RIbHBe0=";
-    };
-  }));
+  base = callPackage ./generic.nix (_args // {
+    version = "8.3.6";
+    hash = "sha256-YySx3djrMCWwQQNLiNwrwLSBmwAiEp7q66N+R4AxCLw=";
+  });
 in
 base.withExtensions ({ all, ... }: with all; ([
   bcmath

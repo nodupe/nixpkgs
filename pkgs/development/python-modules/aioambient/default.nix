@@ -2,6 +2,7 @@
 , aiohttp
 , aresponses
 , buildPythonPackage
+, certifi
 , fetchFromGitHub
 , poetry-core
 , pytest-aiohttp
@@ -15,29 +16,25 @@
 
 buildPythonPackage rec {
   pname = "aioambient";
-  version = "2023.10.1";
-  format = "pyproject";
+  version = "2024.01.0";
+  pyproject = true;
 
   disabled = pythonOlder "3.9";
 
   src = fetchFromGitHub {
     owner = "bachya";
-    repo = pname;
+    repo = "aioambient";
     rev = "refs/tags/${version}";
-    hash = "sha256-Q7jb0tJsbVM2vEqKgjXOWJN2OwR9qLchU/4ShOUGPT4=";
+    hash = "sha256-eqZVY0L+2BWF7cCXW/VLQYYXNPtUF6tJHQmeZNW1W5o=";
   };
 
-  postPatch = ''
-    substituteInPlace pyproject.toml \
-      --replace 'websockets = ">=11.0.1"' 'websockets = "*"'
-  '';
-
-  nativeBuildInputs = [
+  build-system = [
     poetry-core
   ];
 
-  propagatedBuildInputs = [
+  dependencies = [
     aiohttp
+    certifi
     python-engineio
     python-socketio
     websockets

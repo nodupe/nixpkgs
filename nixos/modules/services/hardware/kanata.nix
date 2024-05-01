@@ -11,7 +11,7 @@ let
         type = types.listOf types.str;
         default = [ ];
         example = [ "/dev/input/by-id/usb-0000_0000-event-kbd" ];
-        description = mdDoc ''
+        description = ''
           Paths to keyboard devices.
 
           An empty list, the default value, lets kanata detect which
@@ -39,7 +39,7 @@ let
             ;; tap within 100ms for capslk, hold more than 100ms for lctl
             cap (tap-hold 100 100 caps lctl))
         '';
-        description = mdDoc ''
+        description = ''
           Configuration other than `defcfg`.
 
           See [example config files](https://github.com/jtroo/kanata)
@@ -50,7 +50,7 @@ let
         type = types.lines;
         default = "";
         example = "danger-enable-cmd yes";
-        description = mdDoc ''
+        description = ''
           Configuration of `defcfg` other than `linux-dev` (generated
           from the devices option) and
           `linux-continue-if-no-devs-found` (hardcoded to be yes).
@@ -62,13 +62,13 @@ let
       extraArgs = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        description = mdDoc "Extra command line arguments passed to kanata.";
+        description = "Extra command line arguments passed to kanata.";
       };
       port = mkOption {
         type = types.nullOr types.port;
         default = null;
         example = 6666;
-        description = mdDoc ''
+        description = ''
           Port to run the TCP server on. `null` will not run the server.
         '';
       };
@@ -78,7 +78,13 @@ let
   mkName = name: "kanata-${name}";
 
   mkDevices = devices:
-    optionalString ((length devices) > 0) "linux-dev ${concatStringsSep ":" devices}";
+    let
+      devicesString = pipe devices [
+        (map (device: "\"" + device + "\""))
+        (concatStringsSep " ")
+      ];
+    in
+    optionalString ((length devices) > 0) "linux-dev (${devicesString})";
 
   mkConfig = name: keyboard: pkgs.writeText "${mkName name}-config.kdb" ''
     (defcfg
@@ -145,17 +151,12 @@ let
 in
 {
   options.services.kanata = {
-    enable = mkEnableOption (mdDoc "kanata");
-    package = mkOption {
-      type = types.package;
-      default = pkgs.kanata;
-      defaultText = literalExpression "pkgs.kanata";
-      example = literalExpression "pkgs.kanata-with-cmd";
-      description = mdDoc ''
-        The kanata package to use.
-
+    enable = mkEnableOption "kanata, a tool to improve keyboard comfort and usability with advanced customization";
+    package = mkPackageOption pkgs "kanata" {
+      example = "kanata-with-cmd";
+      extraDescription = ''
         ::: {.note}
-        If `danger-enable-cmd` is enabled in any of the keyboards, the
+        If {option}`danger-enable-cmd` is enabled in any of the keyboards, the
         `kanata-with-cmd` package should be used.
         :::
       '';
@@ -163,7 +164,7 @@ in
     keyboards = mkOption {
       type = types.attrsOf (types.submodule keyboard);
       default = { };
-      description = mdDoc "Keyboard configurations.";
+      description = "Keyboard configurations.";
     };
   };
 

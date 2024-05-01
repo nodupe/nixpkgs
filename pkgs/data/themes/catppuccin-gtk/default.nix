@@ -7,6 +7,7 @@
 , gtk-engine-murrine
 , python3
 , sassc
+, nix-update-script
 , accents ? [ "blue" ]
 , size ? "standard"
 , tweaks ? [ ]
@@ -15,7 +16,7 @@
 let
   validAccents = [ "blue" "flamingo" "green" "lavender" "maroon" "mauve" "peach" "pink" "red" "rosewater" "sapphire" "sky" "teal" "yellow" ];
   validSizes = [ "standard" "compact" ];
-  validTweaks = [ "black" "rimless" "normal" ];
+  validTweaks = [ "black" "rimless" "normal" "float" ];
   validVariants = [ "latte" "frappe" "macchiato" "mocha" ];
 
   pname = "catppuccin-gtk";
@@ -28,16 +29,20 @@ lib.checkListOfEnum "${pname}: tweaks" validTweaks tweaks
 
 stdenvNoCC.mkDerivation rec {
   inherit pname;
-  version = "0.7.0";
+  version = "0.7.3";
 
   src = fetchFromGitHub {
     owner = "catppuccin";
     repo = "gtk";
     rev = "v${version}";
-    hash = "sha256-J1iLN2FF3Ml/3zmntXYlfkv6dZcwl62A9X4ruAH1ll4=";
+    hash = "sha256-pGL8vaE63ss2ZT2FoNDfDkeuCxjcbl02RmwwfHC/Vxg=";
   };
 
   nativeBuildInputs = [ gtk3 sassc ];
+
+  patches = [
+    ./colloid-src-git-reset.patch
+  ];
 
   buildInputs = [
     gnome-themes-extra
@@ -53,7 +58,7 @@ stdenvNoCC.mkDerivation rec {
   '';
 
   postPatch = ''
-    patchShebangs --build colloid/install.sh
+    patchShebangs --build colloid/install.sh colloid/build.sh
   '';
 
   dontConfigure = true;
@@ -62,6 +67,7 @@ stdenvNoCC.mkDerivation rec {
   installPhase = ''
     runHook preInstall
 
+    cp -r colloid colloid-base
     mkdir -p $out/share/themes
     export HOME=$(mktemp -d)
 
@@ -74,11 +80,13 @@ stdenvNoCC.mkDerivation rec {
     runHook postInstall
   '';
 
+  passthru.updateScript = nix-update-script { };
+
   meta = with lib; {
     description = "Soothing pastel theme for GTK";
     homepage = "https://github.com/catppuccin/gtk";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
-    maintainers = with maintainers; [ fufexan PlayerNameHere ];
+    maintainers = with maintainers; [ fufexan dixslyf ];
   };
 }

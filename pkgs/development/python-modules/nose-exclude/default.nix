@@ -8,6 +8,7 @@
 buildPythonPackage rec {
   pname = "nose-exclude";
   version = "0.5.0";
+  format = "setuptools";
 
   src = fetchPypi {
     inherit pname version;
@@ -23,6 +24,5 @@ buildPythonPackage rec {
     license = lib.licenses.lgpl21;
     description = "Exclude specific directories from nosetests runs";
     homepage = "https://github.com/kgrandis/nose-exclude";
-    maintainers = with lib.maintainers; [ fridh ];
   };
 }

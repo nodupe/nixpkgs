@@ -13,10 +13,10 @@ let
 in
 stdenv.mkDerivation rec {
   inherit pname;
-  version = "10.9.0";
+  version = "10.10.0";
   src = fetchurl {
     url = "https://github.com/betaflight/${pname}/releases/download/${version}/${pname}_${version}_linux64-portable.zip";
-    sha256 = "sha256-9FzMyBIR2u1zXHtTWJABM6RF1+OyjYdEPlRwtig9blI=";
+    sha256 = "sha256-UB5Vr5wyCUZbOaQNckJQ1tAXwh8VSLNI1IgTiJzxV08=";
   };
 
   # remove large unneeded files
@@ -43,6 +43,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description = "The Betaflight flight control system configuration tool";
+    mainProgram = "betaflight-configurator";
     longDescription = ''
       A crossplatform configuration tool for the Betaflight flight control system.
       Various types of aircraft are supported by the tool and by Betaflight, e.g.

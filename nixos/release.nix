@@ -12,7 +12,7 @@ let
 
   version = fileContents ../.version;
   versionSuffix =
-    (if stableBranch then "." else "beta") + "${toString (nixpkgs.revCount - 551362)}.${nixpkgs.shortRev}";
+    (if stableBranch then "." else "pre") + "${toString nixpkgs.revCount}.${nixpkgs.shortRev}";
 
   # Run the tests for each platform.  You can run a test by doing
   # e.g. ‘nix-build release.nix -A tests.login.x86_64-linux’,
@@ -174,6 +174,12 @@ in rec {
   iso_plasma5 = forMatchingSystems supportedSystems (system: makeIso {
     module = ./modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma5.nix;
     type = "plasma5";
+    inherit system;
+  });
+
+  iso_plasma6 = forMatchingSystems supportedSystems (system: makeIso {
+    module = ./modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix;
+    type = "plasma6";
     inherit system;
   });
 
@@ -435,7 +441,7 @@ in rec {
 
     kde = makeClosure ({ ... }:
       { services.xserver.enable = true;
-        services.xserver.displayManager.sddm.enable = true;
+        services.displayManager.sddm.enable = true;
         services.xserver.desktopManager.plasma5.enable = true;
       });
 

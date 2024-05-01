@@ -11,17 +11,17 @@
 buildDotnetModule rec {
   pname = "ArchiSteamFarm";
   # nixpkgs-update: no auto update
-  version = "5.4.12.5";
+  version = "6.0.1.24";
 
   src = fetchFromGitHub {
     owner = "JustArchiNET";
     repo = "ArchiSteamFarm";
     rev = version;
-    hash = "sha256-iIYA9BnHUfsB4J7VbSLKaRdJHMW/xULJxKfv8atfAd8=";
+    hash = "sha256-IgsiL5YUeOWQ/WIaTfs0Kmv2XFori8ntGZhrx7xeMkg=";
   };
 
-  dotnet-runtime = dotnetCorePackages.aspnetcore_7_0;
-  dotnet-sdk = dotnetCorePackages.sdk_7_0;
+  dotnet-runtime = dotnetCorePackages.aspnetcore_8_0;
+  dotnet-sdk = dotnetCorePackages.sdk_8_0;
 
   nugetDeps = ./deps.nix;
 
@@ -32,7 +32,7 @@ buildDotnetModule rec {
     "-p:PublishTrimmed=true"
   ];
   dotnetInstallFlags = [
-    "--framework=net7.0"
+    "--framework=net8.0"
   ];
   selfContainedBuild = true;
 
@@ -56,9 +56,8 @@ buildDotnetModule rec {
     buildPlugin() {
       echo "Publishing plugin $1"
       dotnet publish $1 -p:ContinuousIntegrationBuild=true -p:Deterministic=true \
-        --output $out/lib/archisteamfarm/plugins/$1 --configuration Release \
-        -p:TargetLatestRuntimePatch=false -p:UseAppHost=false --no-restore \
-        --framework=net7.0
+        --output $out/lib/ArchiSteamFarm/plugins/$1 --configuration Release \
+        -p:UseAppHost=false
      }
 
      buildPlugin ArchiSteamFarm.OfficialPlugins.ItemsMatcher
@@ -77,6 +76,6 @@ buildDotnetModule rec {
     homepage = "https://github.com/JustArchiNET/ArchiSteamFarm";
     license = licenses.asl20;
     mainProgram = "ArchiSteamFarm";
-    maintainers = with maintainers; [ SuperSandro2000 lom ];
+    maintainers = with maintainers; [ SuperSandro2000 ];
   };
 }

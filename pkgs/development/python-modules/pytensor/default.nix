@@ -18,24 +18,21 @@
 , pytest-mock
 , pytestCheckHook
 , pythonOlder
-# Tensorflow is currently (2023/10/04) broken.
-# Thus, we don't provide this optional test dependency.
-# , tensorflow-probability
-, stdenv
+, tensorflow-probability
 }:
 
 buildPythonPackage rec {
   pname = "pytensor";
-  version = "2.17.3";
+  version = "2.20.0";
   pyproject = true;
 
-  disabled = pythonOlder "3.9";
+  disabled = pythonOlder "3.10";
 
   src = fetchFromGitHub {
     owner = "pymc-devs";
     repo = "pytensor";
     rev = "refs/tags/rel-${version}";
-    hash = "sha256-FufPCFzSjG8BrHes7t3XsdovX9gqUBG0gMDGKvkRkSA=";
+    hash = "sha256-bvkOMer+zYSsiU4a147eUEZjjUeTVpb9f/hepMZZ3sE=";
   };
 
   postPatch = ''
@@ -43,12 +40,12 @@ buildPythonPackage rec {
       --replace "versioneer[toml]==0.28" "versioneer[toml]"
   '';
 
-  nativeBuildInputs = [
+  build-system = [
     cython
     versioneer
   ];
 
-  propagatedBuildInputs = [
+  dependencies = [
     cons
     etuples
     filelock
@@ -66,9 +63,7 @@ buildPythonPackage rec {
     numba-scipy
     pytest-mock
     pytestCheckHook
-    # Tensorflow is currently (2023/10/04) broken.
-    # Thus, we don't provide this optional test dependency.
-    # tensorflow-probability
+    tensorflow-probability
   ];
 
   preBuild = ''
@@ -86,8 +81,6 @@ buildPythonPackage rec {
     "test_logsumexp_benchmark"
     "test_scan_multiple_output"
     "test_vector_taps_benchmark"
-    # Temporarily disabled because of broken tensorflow-probability
-    "test_tfp_ops"
   ];
 
   disabledTestPaths = [
@@ -99,10 +92,10 @@ buildPythonPackage rec {
 
   meta = with lib; {
     description = "Python library to define, optimize, and efficiently evaluate mathematical expressions involving multi-dimensional arrays";
+    mainProgram = "pytensor-cache";
     homepage = "https://github.com/pymc-devs/pytensor";
     changelog = "https://github.com/pymc-devs/pytensor/releases";
     license = licenses.bsd3;
-    maintainers = with maintainers; [ bcdarwin ];
-    broken = (stdenv.isLinux && stdenv.isAarch64);
+    maintainers = with maintainers; [ bcdarwin ferrine ];
   };
 }

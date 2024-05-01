@@ -20,14 +20,14 @@ stdenv.mkDerivation {
   # Determine version and revision from:
   # https://sourceforge.net/p/netpbm/code/HEAD/log/?path=/advanced
   pname = "netpbm";
-  version = "11.4.4";
+  version = "11.6.0";
 
   outputs = [ "bin" "out" "dev" ];
 
   src = fetchsvn {
     url = "https://svn.code.sf.net/p/netpbm/code/advanced";
-    rev = "4784";
-    sha256 = "GoO32AWu2s/s1IzehPynCJctc1F98dQhz5cQSXQhu2A=";
+    rev = "4897";
+    sha256 = "2aTDM0aVfav2mnOLXj0HuTdbsY7EUH8ieBrXgaFU7FU=";
   };
 
   nativeBuildInputs = [

@@ -11,16 +11,16 @@
 
 buildGoModule rec {
   pname = "sing-box";
-  version = "1.6.5";
+  version = "1.8.12";
 
   src = fetchFromGitHub {
     owner = "SagerNet";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-djbRt4VdrZ2a0yLbNaFNhKIN0AwuCCJATIcwFhnw5aM=";
+    hash = "sha256-hgp4SzPJMeIaCxsuK7Y93h6E3KxK0KdNp+DCfv8UtiI=";
   };
 
-  vendorHash = "sha256-qoW9+t427k5Ea9BhAdWIh+utD7EnIU1OLKJfsmYlEt8=";
+  vendorHash = "sha256-4P36eTT7Q5+fZuPUGKEYal3NQ9WyEJxfNVoKJRIk6bo=";
 
   tags = [
     "with_quic"
@@ -53,8 +53,8 @@ buildGoModule rec {
       --zsh  <(${emulator} $out/bin/sing-box completion zsh )
 
     substituteInPlace release/config/sing-box{,@}.service \
-      --replace "/usr/bin/sing-box" "$out/bin/sing-box" \
-      --replace "/bin/kill" "${coreutils}/bin/kill"
+      --replace-fail "/usr/bin/sing-box" "$out/bin/sing-box" \
+      --replace-fail "/bin/kill" "${coreutils}/bin/kill"
     install -Dm444 -t "$out/lib/systemd/system/" release/config/sing-box{,@}.service
   '';
 
@@ -68,5 +68,6 @@ buildGoModule rec {
     description = "The universal proxy platform";
     license = licenses.gpl3Plus;
     maintainers = with maintainers; [ nickcao ];
+    mainProgram = "sing-box";
   };
 }

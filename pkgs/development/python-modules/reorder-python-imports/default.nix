@@ -10,6 +10,7 @@
 buildPythonPackage rec {
   pname = "reorder-python-imports";
   version = "3.12.0";
+  format = "setuptools";
   disabled = pythonOlder "3.8";
 
   src = fetchFromGitHub {
@@ -40,6 +41,7 @@ buildPythonPackage rec {
 
   meta = with lib; {
     description = "Tool for automatically reordering python imports";
+    mainProgram = "reorder-python-imports";
     homepage = "https://github.com/asottile/reorder_python_imports";
     license = licenses.mit;
     maintainers = with maintainers; [ gador ];

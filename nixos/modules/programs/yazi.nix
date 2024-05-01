@@ -9,9 +9,9 @@ let
 in
 {
   options.programs.yazi = {
-    enable = lib.mkEnableOption (lib.mdDoc "yazi terminal file manager");
+    enable = lib.mkEnableOption "yazi terminal file manager";
 
-    package = lib.mkPackageOptionMD pkgs "yazi" { };
+    package = lib.mkPackageOption pkgs "yazi" { };
 
     settings = lib.mkOption {
       type = with lib.types; submodule {
@@ -19,16 +19,16 @@ in
           (name: lib.nameValuePair name (lib.mkOption {
             inherit (settingsFormat) type;
             default = { };
-            description = lib.mdDoc ''
+            description = ''
               Configuration included in `${name}.toml`.
 
-              See https://github.com/sxyazi/yazi/blob/v${cfg.package.version}/config/docs/${name}.md for documentation.
+              See https://yazi-rs.github.io/docs/configuration/${name}/ for documentation.
             '';
           }))
           names);
       };
       default = { };
-      description = lib.mdDoc ''
+      description = ''
         Configuration included in `$YAZI_CONFIG_HOME`.
       '';
     };
@@ -47,7 +47,5 @@ in
   };
   meta = {
     maintainers = with lib.maintainers; [ linsui ];
-    # The version of the package is used in the doc.
-    buildDocsInSandbox = false;
   };
 }

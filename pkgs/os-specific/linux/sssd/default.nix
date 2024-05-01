@@ -1,11 +1,11 @@
-{ lib, stdenv, fetchFromGitHub, autoreconfHook, makeWrapper, glibc, augeas, dnsutils, c-ares, curl,
+{ lib, stdenv, fetchFromGitHub, autoreconfHook, makeWrapper, glibc, adcli, augeas, dnsutils, c-ares, curl,
   cyrus_sasl, ding-libs, libnl, libunistring, nss, samba, nfs-utils, doxygen,
   python3, pam, popt, talloc, tdb, tevent, pkg-config, ldb, openldap,
   pcre2, libkrb5, cifs-utils, glib, keyutils, dbus, fakeroot, libxslt, libxml2,
   libuuid, systemd, nspr, check, cmocka, uid_wrapper, p11-kit,
   nss_wrapper, ncurses, Po4a, http-parser, jansson, jose,
   docbook_xsl, docbook_xml_dtd_44,
-  testers, nix-update-script, nixosTests,
+  testers, nix-update-script, nixosTests, fetchpatch,
   withSudo ? false }:
 
 let
@@ -13,21 +13,32 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "sssd";
-  version = "2.9.3";
+  version = "2.9.4";
 
   src = fetchFromGitHub {
     owner = "SSSD";
     repo = "sssd";
     rev = "refs/tags/${finalAttrs.version}";
-    hash = "sha256-WTVOt2TpTCyMmFYzWJMBQdwgmov7m1Sd8CwyL4ywPUY=";
+    hash = "sha256-VJXZndbmC6mAVxzvv5Wjb4adrQkP16Rt4cgjl4qGDIc=";
   };
+
+  patches = [
+    # Fix the build with Samba 4.20
+    (fetchpatch {
+      url = "https://github.com/SSSD/sssd/commit/1bf51929a48b84d62ac54f2a42f17e7fbffe1612.patch";
+      hash = "sha256-VLx04APEipp860iOJNIwTGywxZ7rIDdyh3te6m7Ymlo=";
+    })
+  ];
 
   postPatch = ''
     patchShebangs ./sbus_generate.sh.in
   '';
 
   # Something is looking for <libxml/foo.h> instead of <libxml2/libxml/foo.h>
-  env.NIX_CFLAGS_COMPILE = "-I${libxml2.dev}/include/libxml2";
+  env.NIX_CFLAGS_COMPILE = toString [
+    "-DRENEWAL_PROG_PATH=\"${adcli}/bin/adcli\""
+    "-I${libxml2.dev}/include/libxml2"
+  ];
 
   preConfigure = ''
     export SGML_CATALOG_FILES="${docbookFiles}"
@@ -99,6 +110,7 @@ stdenv.mkDerivation (finalAttrs: {
   passthru = {
     tests = {
       inherit (nixosTests) sssd sssd-ldap;
+      pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
       version = testers.testVersion {
         package = finalAttrs.finalPackage;
         command = "sssd --version";
@@ -114,5 +126,11 @@ stdenv.mkDerivation (finalAttrs: {
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
     maintainers = with maintainers; [ illustris ];
+    pkgConfigModules = [
+      "ipa_hbac"
+      "sss_certmap"
+      "sss_idmap"
+      "sss_nss_idmap"
+    ];
   };
 })

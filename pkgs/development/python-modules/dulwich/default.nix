@@ -3,7 +3,7 @@
 , buildPythonPackage
 , certifi
 , fastimport
-, fetchPypi
+, fetchFromGitHub
 , gevent
 , geventhttpclient
 , git
@@ -11,24 +11,32 @@
 , gnupg
 , gpgme
 , paramiko
+, pytest-xdist
 , pytestCheckHook
 , pythonOlder
+, setuptools
+, setuptools-rust
 , urllib3
 }:
 
 buildPythonPackage rec {
-  version = "0.21.6";
+  version = "0.21.7";
   pname = "dulwich";
   format = "setuptools";
 
   disabled = pythonOlder "3.7";
 
-  src = fetchPypi {
-    inherit pname version;
-    hash = "sha256-MPvofotR84E8Ex4oQchtAHQ00WC9FttYa0DUfzHdBbA=";
+  src = fetchFromGitHub {
+    owner = "jelmer";
+    repo = "dulwich";
+    rev = "refs/tags/${pname}-${version}";
+    hash = "sha256-iP+6KtaQ8tfOobovSLSJZogS/XWW0LuHgE2oV8uQW/8=";
   };
 
-  LC_ALL = "en_US.UTF-8";
+  build-system = [
+    setuptools
+    setuptools-rust
+  ];
 
   propagatedBuildInputs = [
     certifi
@@ -53,6 +61,7 @@ buildPythonPackage rec {
     geventhttpclient
     git
     glibcLocales
+    pytest-xdist
     pytestCheckHook
   ] ++ passthru.optional-dependencies.fastimport
   ++ passthru.optional-dependencies.pgp
@@ -72,6 +81,8 @@ buildPythonPackage rec {
   disabledTestPaths = [
     # missing test inputs
     "dulwich/contrib/test_swift_smoke.py"
+    # flaky on high core count >4
+    "dulwich/tests/compat/test_client.py"
   ];
 
   pythonImportsCheck = [
@@ -85,7 +96,7 @@ buildPythonPackage rec {
       does not depend on Git itself. All functionality is available in pure Python.
     '';
     homepage = "https://www.dulwich.io/";
-    changelog = "https://github.com/dulwich/dulwich/blob/dulwich-${version}/NEWS";
+    changelog = "https://github.com/jelmer/dulwich/blob/dulwich-${version}/NEWS";
     license = with licenses; [ asl20 gpl2Plus ];
     maintainers = with maintainers; [ koral ];
   };

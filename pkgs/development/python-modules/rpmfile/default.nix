@@ -6,6 +6,7 @@
 buildPythonPackage rec {
   pname = "rpmfile";
   version = "2.0.0";
+  format = "setuptools";
 
   src = fetchPypi {
     inherit pname version;
@@ -25,6 +26,7 @@ buildPythonPackage rec {
 
   meta = with lib; {
     description = "Read rpm archive files";
+    mainProgram = "rpmfile";
     homepage = "https://github.com/srossross/rpmfile";
     license = licenses.mit;
     maintainers = [ ];

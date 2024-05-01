@@ -1,9 +1,9 @@
 { lib }:
 
 rec {
-  version = "1.37.0";
+  version = "1.70.0";
 
-  srcHash = "sha256-oFJ43dq3DAhux0UEFDKFZnxruoRdOfCndKY6XgG3d5I=";
+  srcHash = "sha256-+fpXHUqTltS+eHvX5qVSLqJkFZGXJ6fTmezDdkocXmY=";
 
   # submodule dependencies
   # these are fetched so we:
@@ -11,10 +11,10 @@ rec {
   #   2. avoid fetchSubmodules since it's prone to impurities
   submodules = {
     "cli/src/semgrep/semgrep_interfaces" = {
-      owner = "returntocorp";
+      owner = "semgrep";
       repo = "semgrep-interfaces";
-      rev = "331603197022625f50a64dd5e3029a96a5f03ada";
-      hash = "sha256-UAcWbTSCIdBGvgGSbdQ+miFOEuBvQ6m42MkU3VeErKY=";
+      rev = "df63c8fe4695d742eb7c027cd5d12ccbb3395dab";
+      hash = "sha256-UHF0rGKYCiefU42bk5T3oBW2GYT4HGSmRQYprfneOlY=";
     };
   };
 
@@ -25,22 +25,26 @@ rec {
   core = {
     x86_64-linux = {
       platform = "any";
-      hash = "sha256-Sj/6tzZMyRQAJL09X/3zgvdGTIhNibqO8usKsus9Xss=";
+      hash = "sha256-DjIv5LTOZbjIr8BFqnIpH5h09KtxrggtA3xdCZ+OvZ8=";
+    };
+    aarch64-linux = {
+      platform = "musllinux_1_0_aarch64.manylinux2014_aarch64";
+      hash = "sha256-09zeVoSb61WeKHJZOLIHXHP+m6X5k7x38iU8jlpubBk=";
     };
     x86_64-darwin = {
       platform = "macosx_10_14_x86_64";
-      hash = "sha256-hC04VknZG6aYYNX7lqvkcOoVslewNqlYax+o1nV2TcM=";
+      hash = "sha256-nRpkJEeO8/cQmScg8vNuRLFfKcJZ7vG7pP37FqgcNlQ=";
     };
     aarch64-darwin = {
       platform = "macosx_11_0_arm64";
-      hash = "sha256-0F+ndM4+0dnxf9acwWvGdIy9iYWSqixS9IzOxa95/yM=";
+      hash = "sha256-SzqFYyWJFNyW5H5xEcxF1GsuLK9GoaqiAx94X754QpI=";
     };
   };
 
   meta = with lib; {
     homepage = "https://semgrep.dev/";
-    downloadPage = "https://github.com/returntocorp/semgrep/";
-    changelog = "https://github.com/returntocorp/semgrep/blob/v${version}/CHANGELOG.md";
+    downloadPage = "https://github.com/semgrep/semgrep/";
+    changelog = "https://github.com/semgrep/semgrep/blob/v${version}/CHANGELOG.md";
     description = "Lightweight static analysis for many languages";
     longDescription = ''
       Semgrep is a fast, open-source, static analysis tool for finding bugs and

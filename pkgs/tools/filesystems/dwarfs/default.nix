@@ -26,14 +26,14 @@
 
 stdenv.mkDerivation rec {
   pname = "dwarfs";
-  version = "0.7.2";
+  version = "0.7.5";
 
   src = fetchFromGitHub {
     owner = "mhx";
     repo = "dwarfs";
     rev = "v${version}";
     fetchSubmodules = true;
-    hash = "sha256-DcPRrATI2cpLZWAL+sSCoXvJ1R0O3yHqhlJW1aEpDpA=";
+    hash = "sha256-Zzm2SaFR31TBBMDfgJulVbqsJBh1He2wBFzHRC/c5vg=";
   };
 
   patches = [
@@ -95,7 +95,7 @@ stdenv.mkDerivation rec {
     description = "A fast high compression read-only file system";
     homepage = "https://github.com/mhx/dwarfs";
     license = licenses.gpl3Plus;
-    maintainers = with maintainers; [ keksbg ];
+    maintainers = with maintainers; [ ];
     platforms = platforms.linux;
   };
 }

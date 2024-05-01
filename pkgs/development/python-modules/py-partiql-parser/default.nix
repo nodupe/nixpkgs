@@ -3,13 +3,13 @@
 , fetchFromGitHub
 , pytestCheckHook
 , pythonOlder
-, setuptools
+, hatchling
 , sure
 }:
 
 buildPythonPackage rec {
   pname = "py-partiql-parser";
-  version = "0.4.0";
+  version = "0.5.4";
   pyproject = true;
 
   disabled = pythonOlder "3.7";
@@ -18,11 +18,11 @@ buildPythonPackage rec {
     owner = "getmoto";
     repo = "py-partiql-parser";
     rev = "refs/tags/${version}";
-    hash = "sha256-gxoBc7PjS4EQix38VNX6u9cwy4FCjENcUN1euOJJLCo=";
+    hash = "sha256-BSqc3xibStb3J6Rua4dDp/eRD5/ns/dU1vGa4vL1Cyo=";
   };
 
-  nativeBuildInputs = [
-    setuptools
+  build-system = [
+    hatchling
   ];
 
   nativeCheckInputs = [

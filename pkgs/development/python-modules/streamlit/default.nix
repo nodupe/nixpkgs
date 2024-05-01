@@ -18,6 +18,7 @@
 , pympler
 , python-dateutil
 , pythonOlder
+, pythonRelaxDepsHook
 , setuptools
 , requests
 , rich
@@ -32,18 +33,23 @@
 
 buildPythonPackage rec {
   pname = "streamlit";
-  version = "1.28.1";
+  version = "1.33.0";
   pyproject = true;
 
   disabled = pythonOlder "3.8";
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-zKBPbZWxS3vDfwyrrydQS4ava04a+Y1zrMgOzc+8xJI=";
+    hash = "sha256-qNqP9G9blIxW0tx6ynphz42ZX08hdEz4IliudeYwBLo=";
   };
 
   nativeBuildInputs = [
     setuptools
+    pythonRelaxDepsHook
+  ];
+
+  pythonRelaxDeps = [
+    "packaging"
   ];
 
   propagatedBuildInputs = [
@@ -89,6 +95,7 @@ buildPythonPackage rec {
     homepage = "https://streamlit.io/";
     changelog = "https://github.com/streamlit/streamlit/releases/tag/${version}";
     description = "The fastest way to build custom ML tools";
+    mainProgram = "streamlit";
     maintainers = with maintainers; [ natsukium yrashk ];
     license = licenses.asl20;
   };

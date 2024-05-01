@@ -12,6 +12,7 @@
 buildPythonPackage rec {
   pname = "sounddevice";
   version = "0.4.6";
+  format = "setuptools";
   disabled = isPy27;
 
   src = fetchPypi {
@@ -37,6 +38,5 @@ buildPythonPackage rec {
     description = "Play and Record Sound with Python";
     homepage = "http://python-sounddevice.rtfd.org/";
     license = with lib.licenses; [ mit ];
-    maintainers = with lib.maintainers; [ fridh ];
   };
 }

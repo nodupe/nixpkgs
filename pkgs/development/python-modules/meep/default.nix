@@ -2,6 +2,8 @@
 , lib
 , buildPythonPackage
 , fetchFromGitHub
+, pythonOlder
+, setuptools
 , autoreconfHook
 , pkg-config
 , mpiCheckPhaseHook
@@ -33,16 +35,22 @@ assert !lapack.isILP64;
 
 buildPythonPackage rec {
   pname = "meep";
-  version = "1.27.0";
+  version = "1.28.0";
 
   src = fetchFromGitHub {
     owner = "NanoComp";
     repo = pname;
     rev = "refs/tags/v${version}";
-    hash = "sha256-9ha6YPlvq2HUTuEqngFOAJUqCahBi7L7O8qsIMMfbrY=";
+    hash = "sha256-o/Xrd/Gn1RsbB+ZfggGH6/ugdsGtfTe2RgaHdpY5AyE=";
   };
 
   format = "other";
+
+  # https://github.com/NanoComp/meep/issues/2819
+  postPatch = lib.optionalString (!pythonOlder "3.12") ''
+    substituteInPlace configure.ac doc/docs/setup.py python/visualization.py \
+      --replace-fail "distutils" "setuptools._distutils"
+  '';
 
   # MPI is needed in nativeBuildInputs too, otherwise MPI libs will be missing
   # at runtime
@@ -76,6 +84,9 @@ buildPythonPackage rec {
     cython
     autograd
     mpi4py
+  ]
+  ++ lib.optionals (!pythonOlder "3.12") [
+      setuptools # used in python/visualization.py
   ];
 
   propagatedUserEnvPkgs = [ mpi ];
@@ -113,7 +124,7 @@ buildPythonPackage rec {
   checkPhase = ''
     runHook preCheck
 
-    export PYTHONPATH="$out/lib/${python.libPrefix}/site-packages:$PYTHONPATH"
+    export PYTHONPATH="$out/${python.sitePackages}:$PYTHONPATH"
 
     # Generate a python test script
     cat > test.py << EOF

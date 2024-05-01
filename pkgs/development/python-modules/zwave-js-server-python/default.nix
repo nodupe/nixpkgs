@@ -1,28 +1,32 @@
-{ lib
-, aiohttp
-, buildPythonPackage
-, fetchFromGitHub
-, pydantic
-, pytest-aiohttp
-, pytestCheckHook
-, pythonOlder
+{
+  lib,
+  aiohttp,
+  buildPythonPackage,
+  fetchFromGitHub,
+  pydantic,
+  pytest-aiohttp,
+  pytestCheckHook,
+  pythonOlder,
+  setuptools,
 }:
 
 buildPythonPackage rec {
   pname = "zwave-js-server-python";
-  version = "0.53.1";
-  format = "setuptools";
+  version = "0.55.4";
+  pyproject = true;
 
   disabled = pythonOlder "3.11";
 
   src = fetchFromGitHub {
     owner = "home-assistant-libs";
-    repo = pname;
+    repo = "zwave-js-server-python";
     rev = "refs/tags/${version}";
-    hash = "sha256-WfKZraF/mh1YTgK2YXnP5JHqjj5oWI9PeZAvt75btr8=";
+    hash = "sha256-wPvMgQR85yHC0k+ENj+r/ilcxmOipSFGkz8qBRLgPaY=";
   };
 
-  propagatedBuildInputs = [
+  build-system = [ setuptools ];
+
+  dependencies = [
     aiohttp
     pydantic
   ];
@@ -32,9 +36,7 @@ buildPythonPackage rec {
     pytestCheckHook
   ];
 
-  pythonImportsCheck = [
-    "zwave_js_server"
-  ];
+  pythonImportsCheck = [ "zwave_js_server" ];
 
   meta = with lib; {
     description = "Python wrapper for zwave-js-server";
@@ -42,5 +44,6 @@ buildPythonPackage rec {
     changelog = "https://github.com/home-assistant-libs/zwave-js-server-python/releases/tag/${version}";
     license = with licenses; [ asl20 ];
     maintainers = with maintainers; [ fab ];
+    mainProgram = "zwave-js-server-python";
   };
 }

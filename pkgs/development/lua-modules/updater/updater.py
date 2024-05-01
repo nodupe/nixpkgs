@@ -16,6 +16,8 @@ import csv
 import logging
 import textwrap
 from multiprocessing.dummy import Pool
+import pluginupdate
+from pluginupdate import update_plugins, FetchConfig
 
 from typing import List, Tuple, Optional
 from pathlib import Path
@@ -24,15 +26,13 @@ log = logging.getLogger()
 log.addHandler(logging.StreamHandler())
 
 ROOT = Path(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))).parent.parent  # type: ignore
-import pluginupdate
-from pluginupdate import update_plugins, FetchConfig, CleanEnvironment
 
 PKG_LIST = "maintainers/scripts/luarocks-packages.csv"
 TMP_FILE = "$(mktemp)"
 GENERATED_NIXFILE = "pkgs/development/lua-modules/generated-packages.nix"
 
 HEADER = """/* {GENERATED_NIXFILE} is an auto-generated file -- DO NOT EDIT!
-Regenerate it with: nix run nixpkgs#update-luarocks-packages
+Regenerate it with: nix run nixpkgs#luarocks-packages-updater
 You can customize the generated packages in pkgs/development/lua-modules/overrides.nix
 */
 """.format(
@@ -171,7 +171,6 @@ def generate_pkg_nix(plug: LuaPlugin):
     if plug.maintainers:
         cmd.append(f"--maintainers={plug.maintainers}")
 
-    # if plug.server == "src":
     if plug.src != "":
         if plug.src is None:
             msg = (
@@ -193,6 +192,9 @@ def generate_pkg_nix(plug: LuaPlugin):
 
     if plug.luaversion:
         cmd.append(f"--lua-version={plug.luaversion}")
+        luaver = plug.luaversion.replace('.', '')
+        if luaver := os.getenv(f"LUA_{luaver}"):
+            cmd.append(f"--lua-dir={luaver}")
 
     log.debug("running %s", " ".join(cmd))
 

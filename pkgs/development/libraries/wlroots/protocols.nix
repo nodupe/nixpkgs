@@ -19,9 +19,6 @@ stdenv.mkDerivation rec {
     substituteInPlace wlr-protocols.pc.in \
       --replace '=''${pc_sysrootdir}' "=" \
       --replace '=@prefix@' "=$out"
-
-    substituteInPlace Makefile \
-      --replace 'wlr-output-power-management-v1.xml' 'wlr-output-power-management-unstable-v1.xml'
   '';
 
   doCheck = true;
@@ -41,6 +38,6 @@ stdenv.mkDerivation rec {
     homepage    = "https://gitlab.freedesktop.org/wlroots/wlr-protocols";
     license     = licenses.mit; # See file headers
     platforms   = platforms.linux;
-    maintainers = with maintainers; [ twitchyliquid64 ];
+    maintainers = with maintainers; [ ];
   };
 }

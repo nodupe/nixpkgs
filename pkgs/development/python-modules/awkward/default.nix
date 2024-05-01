@@ -1,4 +1,6 @@
 { lib
+, fsspec
+, stdenv
 , buildPythonPackage
 , pythonOlder
 , fetchFromGitHub
@@ -9,7 +11,6 @@
 , numpy
 , packaging
 , typing-extensions
-, fsspec
 , jax
 , jaxlib
 , numba
@@ -23,7 +24,7 @@
 
 buildPythonPackage rec {
   pname = "awkward";
-  version = "2.4.10";
+  version = "2.6.3";
   pyproject = true;
 
   disabled = pythonOlder "3.8";
@@ -32,7 +33,7 @@ buildPythonPackage rec {
     owner = "scikit-hep";
     repo = "awkward";
     rev = "refs/tags/v${version}";
-    hash = "sha256-D+bgKI6olK3smgnRdACvd0gYMWvS6ao6f7nQh3YExXw=";
+    hash = "sha256-zII5TZ0bzVEo5hTrLr45N7oL3lYhkCyNfZif+0vkEo4=";
   };
 
   nativeBuildInputs = [
@@ -42,6 +43,7 @@ buildPythonPackage rec {
 
   propagatedBuildInputs = [
     awkward-cpp
+    fsspec
     importlib-metadata
     numpy
     packaging
@@ -57,8 +59,6 @@ buildPythonPackage rec {
 
   nativeCheckInputs = [
     fsspec
-    jax
-    jaxlib
     numba
     setuptools
     numexpr
@@ -66,11 +66,18 @@ buildPythonPackage rec {
     pyarrow
     pytest-xdist
     pytestCheckHook
+  ] ++ lib.optionals (!stdenv.isDarwin) [
+    # no support for darwin
+    jax
+    jaxlib
   ];
 
   # The following tests have been disabled because they need to be run on a GPU platform.
   disabledTestPaths = [
     "tests-cuda"
+  # Disable tests dependending on jax on darwin
+  ] ++ lib.optionals stdenv.isDarwin [
+    "tests/test_2603_custom_behaviors_with_jax.py"
   ];
 
   meta = with lib; {

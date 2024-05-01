@@ -2,16 +2,16 @@
 
 php.buildComposerProject (finalAttrs: {
   pname = "platformsh";
-  version = "4.10.0";
+  version = "4.17.0";
 
   src = fetchFromGitHub {
     owner = "platformsh";
     repo = "legacy-cli";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-aEQxlotwMScEIfHrVDdXBgFxMqAIypkEl9TLi1Bvhnw=";
+    hash = "sha256-8x7Fl1bYZIND4PuxVmPFNO2QOjeLMiIXh409DXG/WMU=";
   };
 
-  vendorHash = "sha256-e89xxgTI6FajDfj8xr8VYlbxJD6lUZWz5+2UFQTClsY=";
+  vendorHash = "sha256-nXPfFlKYi2qP1bTeurRsopncKWg4zIZnZsSX/i0SF/s=";
 
   prePatch = ''
     substituteInPlace config-defaults.yaml \
@@ -36,7 +36,7 @@ php.buildComposerProject (finalAttrs: {
     homepage = "https://github.com/platformsh/legacy-cli";
     license = lib.licenses.mit;
     mainProgram = "platform";
-    maintainers = with lib.maintainers; [ shyim ];
+    maintainers = with lib.maintainers; [ shyim spk ];
     platforms = lib.platforms.all;
   };
 })

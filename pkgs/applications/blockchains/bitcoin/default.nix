@@ -13,7 +13,6 @@
 , miniupnpc
 , zeromq
 , zlib
-, db48
 , sqlite
 , qrencode
 , qtbase ? null
@@ -33,14 +32,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = if withGui then "bitcoin" else "bitcoind";
-  version = "25.1";
+  version = "27.0";
 
   src = fetchurl {
     urls = [
       "https://bitcoincore.org/bin/bitcoin-core-${version}/bitcoin-${version}.tar.gz"
     ];
     # hash retrieved from signed SHA256SUMS
-    sha256 = "bec2a598d8dfa8c2365b77f13012a733ec84b8c30386343b7ac1996e901198c9";
+    sha256 = "9c1ee651d3b157baccc3388be28b8cf3bfcefcd2493b943725ad6040ca6b146b";
   };
 
   nativeBuildInputs =
@@ -51,13 +50,13 @@ stdenv.mkDerivation rec {
     ++ lib.optionals withGui [ wrapQtAppsHook ];
 
   buildInputs = [ boost libevent miniupnpc zeromq zlib ]
-    ++ lib.optionals withWallet [ db48 sqlite ]
+    ++ lib.optionals withWallet [ sqlite ]
     ++ lib.optionals withGui [ qrencode qtbase qttools ];
 
   postInstall = ''
-    installShellCompletion --cmd bitcoin-cli --bash contrib/completions/bash/bitcoin-cli.bash-completion
-    installShellCompletion --cmd bitcoind --bash contrib/completions/bash/bitcoind.bash-completion
-    installShellCompletion --cmd bitcoin-tx --bash contrib/completions/bash/bitcoin-tx.bash-completion
+    installShellCompletion --bash contrib/completions/bash/bitcoin-cli.bash
+    installShellCompletion --bash contrib/completions/bash/bitcoind.bash
+    installShellCompletion --bash contrib/completions/bash/bitcoin-tx.bash
 
     installShellCompletion --fish contrib/completions/fish/bitcoin-cli.fish
     installShellCompletion --fish contrib/completions/fish/bitcoind.fish
@@ -70,6 +69,10 @@ stdenv.mkDerivation rec {
     install -Dm644 ${desktop} $out/share/applications/bitcoin-qt.desktop
     substituteInPlace $out/share/applications/bitcoin-qt.desktop --replace "Icon=bitcoin128" "Icon=bitcoin"
     install -Dm644 share/pixmaps/bitcoin256.png $out/share/pixmaps/bitcoin.png
+  '';
+
+  preConfigure = lib.optionalString stdenv.isDarwin ''
+    export MACOSX_DEPLOYMENT_TARGET=10.13
   '';
 
   configureFlags = [

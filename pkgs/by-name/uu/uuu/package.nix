@@ -10,22 +10,25 @@
 , bzip2
 , libusb1
 , openssl
+, tinyxml-2
 , zlib
 , zstd
 }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "uuu";
-  version = "1.5.141";
+  version = "1.5.179";
 
   src = fetchFromGitHub {
     owner = "nxp-imx";
     repo = "mfgtools";
     rev = "uuu_${finalAttrs.version}";
-    hash = "sha256-N5L6k2oVXfnER7JRoX0JtzgEhb/vFMexu7hUKQhmcoE=";
+    hash = "sha256-W0jFwivjD19SQmXz2G7cIvWh1zkyN4AXh3bfqF302MA=";
   };
 
-  passthru.updateScript = nix-update-script { };
+  passthru.updateScript = nix-update-script {
+    extraArgs = [ "--version-regex" "uuu_\([0-9.]+\)" ];
+  };
 
   nativeBuildInputs = [
     cmake
@@ -37,6 +40,7 @@ stdenv.mkDerivation (finalAttrs: {
     bzip2
     libusb1
     openssl
+    tinyxml-2
     zlib
     zstd
   ];

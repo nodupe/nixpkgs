@@ -5,6 +5,8 @@ let
   inherit (self) callPackage;
 in
 {
+  inherit (pkgs) emacspeak;
+
   acm = callPackage ./manual-packages/acm { };
 
   acm-terminal = callPackage ./manual-packages/acm-terminal { };
@@ -17,9 +19,13 @@ in
 
   cask = callPackage ./manual-packages/cask { };
 
+  codeium = callPackage ./manual-packages/codeium { };
+
   consult-gh = callPackage ./manual-packages/consult-gh { };
 
   control-lock = callPackage ./manual-packages/control-lock { };
+
+  copilot = callPackage ./manual-packages/copilot { };
 
   ebuild-mode = callPackage ./manual-packages/ebuild-mode { };
 
@@ -27,15 +33,13 @@ in
 
   elisp-ffi = callPackage ./manual-packages/elisp-ffi { };
 
-  emacspeak = callPackage ./manual-packages/emacspeak { };
-
   ess-R-object-popup = callPackage ./manual-packages/ess-R-object-popup { };
 
   evil-markdown = callPackage ./manual-packages/evil-markdown { };
 
   font-lock-plus = callPackage ./manual-packages/font-lock-plus { };
 
-  ghc-mod = callPackage ./manual-packages/elisp-ffi { };
+  ghc-mod = callPackage ./manual-packages/ghc-mod { };
 
   git-undo = callPackage ./manual-packages/git-undo { };
 
@@ -81,6 +85,8 @@ in
 
   sv-kalender = callPackage ./manual-packages/sv-kalender { };
 
+  texpresso = callPackage ./manual-packages/texpresso { inherit (pkgs) texpresso; };
+
   tree-sitter-langs = callPackage ./manual-packages/tree-sitter-langs { final = self; };
 
   treesit-grammars = callPackage ./manual-packages/treesit-grammars { };
@@ -92,6 +98,8 @@ in
   voicemacs = callPackage ./manual-packages/voicemacs { };
 
   wat-mode = callPackage ./manual-packages/wat-mode { };
+
+  xapian-lite = callPackage ./manual-packages/xapian-lite { };
 
   yes-no = callPackage ./manual-packages/yes-no { };
 
@@ -111,4 +119,6 @@ in
   emacsSessionManagement = self.session-management-for-emacs;
   rectMark = self.rect-mark;
   sunriseCommander = self.sunrise-commander;
+
+  __attrsFailEvaluation = true;
 }

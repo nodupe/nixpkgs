@@ -3,21 +3,39 @@
 , buildPythonPackage
 , fetchPypi
 , substituteAll
-, portmidi
-, python-rtmidi
-, pytestCheckHook
+
+# build-system
 , setuptools
 , setuptools-scm
+, pythonRelaxDepsHook
+
+# dependencies
+, packaging
+
+# native dependencies
+, portmidi
+
+# optional-dependencies
+, pygame
+, python-rtmidi
+, rtmidi-python
+
+# tests
+, pytestCheckHook
+, pythonOlder
+
 }:
 
 buildPythonPackage rec {
   pname = "mido";
-  version = "1.3.0";
-  format = "pyproject";
+  version = "1.3.2";
+  pyproject = true;
+
+  disabled = pythonOlder "3.7";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "sha256-hCguOs40vKP5hCINstvLmCRc/q+4VCYMAuAAdQ3Khqo=";
+    hash = "sha256-Ouootu1zD3N9WxLaNXjevp3FAFj6Nw/pzt7ZGJtnw0g=";
   };
 
   patches = [
@@ -27,14 +45,25 @@ buildPythonPackage rec {
     })
   ];
 
-  nativeBuildInputs = [
+  build-system = [
     setuptools
     setuptools-scm
+    pythonRelaxDepsHook
   ];
 
-  propagatedBuildInputs = [
-    python-rtmidi
+  pythonRelaxDeps = [
+    "packaging"
   ];
+
+  dependencies = [
+    packaging
+  ];
+
+  optional-dependencies = {
+    ports-pygame = [ pygame ];
+    ports-rtmidi = [ python-rtmidi ];
+    ports-rtmidi-python = [ rtmidi-python ];
+  };
 
   nativeCheckInputs = [
     pytestCheckHook
@@ -47,6 +76,7 @@ buildPythonPackage rec {
   meta = with lib; {
     description = "MIDI Objects for Python";
     homepage = "https://mido.readthedocs.io";
+    changelog = "https://github.com/mido/mido/releases/tag/${version}";
     license = licenses.mit;
     maintainers = with maintainers; [ ];
   };

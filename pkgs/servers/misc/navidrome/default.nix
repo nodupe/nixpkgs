@@ -1,4 +1,5 @@
 { buildGoModule
+, buildPackages
 , fetchFromGitHub
 , fetchNpmDeps
 , lib
@@ -17,27 +18,27 @@
 
 buildGoModule rec {
   pname = "navidrome";
-  version = "0.50.0";
+  version = "0.51.1";
 
   src = fetchFromGitHub {
     owner = "navidrome";
     repo = "navidrome";
     rev = "v${version}";
-    hash = "sha256-NcAyr0X4a4dG9KAUW5oV2hR/uT0o1pZx7z2LRMm8RDY=";
+    hash = "sha256-6IYQrSWqrvYz2tDlk14UaX36bdXN0DbF7ynaa3Qboa4=";
   };
 
-  vendorHash = "sha256-aAJjDFnacY6A0fdODSJiFkeA8Gb9VCirUB3RcKatx0w=";
+  vendorHash = "sha256-Q95OchWkxd/EmG7Vu0e/dge9nOIrGmcTgjGL5dBvEKA=";
 
   npmRoot = "ui";
 
   npmDeps = fetchNpmDeps {
     inherit src;
     sourceRoot = "${src.name}/ui";
-    hash = "sha256-hOLGReiC/mgVefpJ0NDM86FbJ/PbLu91JuJoJZ7NwT0=";
+    hash = "sha256-LrLswdt6RA55FQE/YWHNwtjxljjlCNSTLWJNqy1ohKo=";
   };
 
   nativeBuildInputs = [
-    makeWrapper
+    buildPackages.makeWrapper
     nodejs
     npmHooks.npmConfigHook
     pkg-config
@@ -76,6 +77,7 @@ buildGoModule rec {
 
   meta = {
     description = "Navidrome Music Server and Streamer compatible with Subsonic/Airsonic";
+    mainProgram = "navidrome";
     homepage = "https://www.navidrome.org/";
     license = lib.licenses.gpl3Only;
     sourceProvenance = with lib.sourceTypes; [ fromSource ];
