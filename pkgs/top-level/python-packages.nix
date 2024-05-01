@@ -4626,11 +4626,9 @@ self: super: with self; {
 
   gcal-sync = callPackage ../development/python-modules/gcal-sync { };
 
-<<<<<<< HEAD
-    gcd-talker = callPackage ../development/python-modules/gcd-talker { };
-=======
+  gcd-talker = callPackage ../development/python-modules/gcd-talker { };
+    
   gcodepy = callPackage ../development/python-modules/gcodepy { };
->>>>>>> master
 
   gcovr = callPackage ../development/python-modules/gcovr { };
 
@@ -9931,21 +9929,16 @@ self: super: with self; {
 
   pyhumps = callPackage ../development/python-modules/pyhumps { };
 
-<<<<<<< HEAD
   pyinstaller = callPackage ../development/python-modules/pyinstaller { };
   
-  pyinstaller-versionfile = callPackage ../development/python-modules/pyinstaller-versionfile { };
-
-  pyinstaller-hooks-contrib = callPackage ../development/python-modules/pyinstaller-hooks-contrib { };
-    
-=======
   pyindego = callPackage ../development/python-modules/pyindego { };
 
   pyinstaller-versionfile = callPackage ../development/python-modules/pyinstaller-versionfile { };
 
+  pyinstaller-hooks-contrib = callPackage ../development/python-modules/pyinstaller-hooks-contrib { };
+    
   pyisemail = callPackage ../development/python-modules/pyisemail { };
 
->>>>>>> master
   pyisy = callPackage ../development/python-modules/pyisy { };
 
   pyixapi = callPackage ../development/python-modules/pyixapi { };
@@ -14958,13 +14951,10 @@ self: super: with self; {
 
   testfixtures = callPackage ../development/python-modules/testfixtures { };
 
-<<<<<<< HEAD
   text2digits = callPackage ../development/python-modules/text2digits { };
   
-=======
   texsoup = callPackage ../development/python-modules/texsoup { };
 
->>>>>>> master
   textfsm = callPackage ../development/python-modules/textfsm { };
 
   textile = callPackage ../development/python-modules/textile { };
