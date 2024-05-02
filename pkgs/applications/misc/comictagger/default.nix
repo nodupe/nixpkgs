@@ -67,12 +67,11 @@ let
     python3.pkgs.mypy #a12
     python3.pkgs.types-setuptools #a12
     python3.pkgs.types-requests #a12
-    
     # Running Deps 
     python3.pkgs.mokkari #a12
     #python3.pkgs.configparser 
     #python3.pkgs.hatchling
-    #python3.pkgs.pycountry
+    python3.pkgs.pycountry # Needed for #1.5.5 - deprecated later on
     #python3.pkgs.pydantic
     #python3.pkgs.pydantic-core
     #python3.pkgs.pydantic-scim
@@ -144,7 +143,7 @@ let
 #      python3.pkgs.pytest
 #      python3.pkgs.tox
 #      python3.pkgs.setuptools_scm
-#      
+
     ];
 
   };
@@ -153,14 +152,13 @@ in
 python3.pkgs.buildPythonApplication {
   pname = "comictagger";
   format = "pyproject";
-  #### Different develop versions
+# Stable Version 1.5.5
     version = "develop";
     dists = "x86_64-linux";
     src = fetchgit {
       url = "https://github.com/comictagger/comictagger.git";
-rev = "6ac2e326121bf582e38c61cf1b9179059989d897";
-#      rev = "996397b9d51872ea2a3bae9ef890495775a196f8";
-      hash = "sha256-r2ofRx4D4A8lsBxvz59bXloQaLHvpQW4F/Lj0iC92mY=";
+      rev ="e5f6a7d1d636eccf68538283aac898f82fed082d";
+      hash = "sha256-AQcjdel5elOCDnBnARimTZXxY5k3hVWOXufoE9fqTlc=";
     leaveDotGit = true;
 
   };
@@ -178,9 +176,9 @@ rev = "6ac2e326121bf582e38c61cf1b9179059989d897";
     libsForQt5.wrapQtAppsHook
   ];
  postPatch = ''
-substituteInPlace comictalker/comictalker.py \
---replace "1.6.0a7" "0.1.dev1"
-substituteInPlace setup.cfg \
+#substituteInPlace comictalker/comictalker.py \
+#--replace "1.6.0a7" "0.1.dev1"
+#substituteInPlace setup.cfg \
 '';
   meta = with lib; {
     description = "A multi-platform app for writing metadata to digital comics";
