@@ -28,12 +28,13 @@ buildPythonPackage rec {
     python3Packages.pytest
     setuptools-scm
     python3.pkgs.pydantic-core
-        python3.pkgs.pydantic
+    python3.pkgs.pydantic
     python3.pkgs.pydantic-scim
     python3.pkgs.invoke
     python3.pkgs.isort
     python3.pkgs.pytest
     python3.pkgs.tox
+    python3.pkgs.mokkari
     python3.pkgs.setuptools_scm
     pkgs.pyenv
   ];

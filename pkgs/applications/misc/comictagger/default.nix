@@ -1,9 +1,10 @@
 { lib, git, python3,  libsForQt5,
   #  python3Packages,
   # unrar,
-  # fetchPypi,
+  fetchPypi,
   # fetchFromGitHub,
- fetchgit
+  fetchgit,
+  python3Packages
 }:
 let
   dependenciesPython = python3.withPackages (pkgs: [
@@ -41,7 +42,7 @@ let
     python3.pkgs.pyqtwebengine #a12
     python3.pkgs.comicinfoxml
     python3.pkgs.gcd-talker #a12
-    python3.pkgs.metron_talker #a12
+#    python3.pkgs.metron_talker #a12
     python3.pkgs.pillow-avif-plugin #a12
     python3.pkgs.py7zr #a12    
     python3.pkgs.rarfile #a12
@@ -66,7 +67,7 @@ let
     python3.pkgs.mypy #a12
     python3.pkgs.types-setuptools #a12
     python3.pkgs.types-requests #a12
-
+    
     # Running Deps 
     python3.pkgs.mokkari #a12
     #python3.pkgs.configparser 
@@ -85,8 +86,71 @@ let
     #python3.pkgs.pytest-flake8
     #python3.pkgs.pydantic-extra-types
     #python3.pkgs.pydantic-settings
+#    mokkari
+    python3.pkgs.poetry-core
+    python3.pkgs.ratelimit
+    python3.pkgs.requests
   ]);
-in python3.pkgs.buildPythonApplication {
+
+  mokkari = python3Packages.buildPythonPackage rec {
+    pname = "mokkari";
+    version = "3.1.0";
+    format = "pyproject";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "sha256-DrVNidm9/i8a45CcRswA97aXX6tOe4BG4wdyTfNSm3E=";
+    };
+    propagatedBuildInputs = [
+      python3.pkgs.poetry-core
+      python3.pkgs.ratelimit
+      python3.pkgs.requests
+      python3.pkgs.pydantic
+      python3.pkgs.mokkari
+    # python3.pkgs.typing-extensions
+    # python3.pkg.pytest
+    # python3.pkgs.setuptools-scm
+    # python3.pkgs.pydantic-core
+    # python3.pkgs.pydantic-scim
+    # python3.pkgs.invoke
+    # python3.pkgs.isort
+    # python3.pkgs.pytest
+    # python3.pkgs.tox
+    # python3.pkgs.setuptools_scm
+    ];
+    buildInputs = [
+    # python3.pkgs.typing-extensions
+    # python3.pkg.pytest
+    # python3.pkgs.setuptools-scm
+    # python3.pkgs.pydantic-core
+    # python3.pkgs.pydantic
+    # python3.pkgs.pydantic-scim
+    # python3.pkgs.invoke
+    # python3.pkgs.isort
+    # python3.pkgs.pytest
+    # python3.pkgs.tox
+    # python3.pkgs.setuptools_scm
+    # 
+    ];
+    nativeBuildInputs = [
+#      python3.pkgs.typing-extensions
+#      python3.pkg.pytest
+#      python3.pkgs.setuptools-scm
+#      python3.pkgs.pydantic-core
+#      python3.pkgs.pydantic
+#      python3.pkgs.pydantic-scim
+#      python3.pkgs.invoke
+#      python3.pkgs.isort
+#      python3.pkgs.pytest
+#      python3.pkgs.tox
+#      python3.pkgs.setuptools_scm
+#      
+    ];
+
+  };
+  
+in
+python3.pkgs.buildPythonApplication {
   pname = "comictagger";
   format = "pyproject";
   #### Different develop versions
@@ -94,76 +158,17 @@ in python3.pkgs.buildPythonApplication {
     dists = "x86_64-linux";
     src = fetchgit {
       url = "https://github.com/comictagger/comictagger.git";
-      rev = "996397b9d51872ea2a3bae9ef890495775a196f8";
-      hash = "sha256-d1UDFd1XNW2u29IVV8AulWGvScS0+adg8uIcitLWoeY=";
-
-#      version = "1.6.0-alpha.12";
-#      dists = "x86_64-linux";
-#      src = fetchgit {
-#        url = "https://github.com/comictagger/comictagger.git";
-#        rev = "2e2d886cb2443f067ba99ae0fb138afe58e8a6d7";
-#        hash = "sha256-o44CMHEhjH3G+D0OkVOP36qUq84CsNtjmQoGU0tPoMU=";
-#
-#
-        
-#  ####  
-#   version = "1.6.0-alpha.10";
-#   dists = "x86_64-linux";
-#   src = fetchgit {
-#     url = "https://github.com/comictagger/comictagger.git";
-#    rev = "39407286b3d873f6217394ccd4a05dc3efa5c9db";
-#    hash = "sha256-Hfxa1LarM/mVGdNDbxddSbXRY8enXY0qiU5GMHRL0r8";
-  ####
-  #      
-#  version = "1.6.0-alpha.9";
-#  dists = "x86_64-linux";
-#  src = fetchgit {
-#    url = "https://github.com/comictagger/comictagger.git";
-#    rev = "1.6.0-alpha.9";
-#    hash = "sha256-9qaUCy4K/oSAdH/Er3DEzxghDNHQYiXr2nRWY8JE6Jo=";
-#  ###
-#  version = "1.6.0-alpha.8";
-#  dists = "x86_64-linux";
-#  src = fetchgit {
-#    url = "https://github.com/comictagger/comictagger.git";
-#    rev = "1.6.0-alpha.8";
-#    hash = "sha256-uXj30R6ltj4DS3UkaFwuf3O7vaN/yO0Lk6xzKMCgKFU=";
-    ###
-    #    version = "1.6.0-alpha.6";
-    #  dists = "x86_64-linux";
-    #  src = fetchgit {
-    #    url = "https://github.com/comictagger/comictagger.git";
-    #    rev = "e7cc05679fb3dd1550df2dd160a2439bcbea1007";
-    #    hash = "sha256-WxcCm5f5zll+dxJtG5/f0j0PXhuzSzhX16Q9VoIv+NY=";
-    ####
-    #  version = "1.6.0-alpha.5";
-    #  dists = "x86_64-linux";
-    #  src = fetchgit {
-    #    url = "https://github.com/comictagger/comictagger.git";
-    #    rev = "3ade47a7e095b1ebb1630a633b62a99706a7f310";
-    #    hash = "sha256-FdB5tqaBGfkRyqDBi/bPyfW67V1yTBl6L43InYY68NE=";
-    ######
-    #      version = "1.6.0-alpha.12";
-    #  dists = "x86_64-linux";
-    #  src = fetchgit {
-    #    url = "https://github.com/comictagger/comictagger.git";
-    #    rev = "996397b9d51872ea2a3bae9ef890495775a196f8";
-    #    hash = "sha256-d1UDFd1XNW2u29IVV8AulWGvScS0+adg8uIcitLWoeY=";
+rev = "6ac2e326121bf582e38c61cf1b9179059989d897";
+#      rev = "996397b9d51872ea2a3bae9ef890495775a196f8";
+      hash = "sha256-r2ofRx4D4A8lsBxvz59bXloQaLHvpQW4F/Lj0iC92mY=";
     leaveDotGit = true;
 
   };
 
-# Stable 1.5.5
-#  src = fetchPypi {
-# pname = "comictagger";
-#    version = "1.5.5";
-#    hash = "sha256-f/SS6mo5zIcNBN/FRMhRPMNOeB1BIqBhsAogjsmdjB0=";
-#  };
-
   preFixup = ''
    wrapQtApp "$out/bin/comictagger"
 '';
-  
+  dontCheckRuntimeDeps = true;
   propagatedBuildInputs = [
     dependenciesPython
     libsForQt5.qtbase
@@ -175,6 +180,7 @@ in python3.pkgs.buildPythonApplication {
  postPatch = ''
 substituteInPlace comictalker/comictalker.py \
 --replace "1.6.0a7" "0.1.dev1"
+substituteInPlace setup.cfg \
 '';
   meta = with lib; {
     description = "A multi-platform app for writing metadata to digital comics";
@@ -183,5 +189,5 @@ substituteInPlace comictalker/comictalker.py \
     maintainers = [ maintainers.provenzano ];
     platforms = [ "x86_64-linux" ];
   };
- };
-}
+ }
+
