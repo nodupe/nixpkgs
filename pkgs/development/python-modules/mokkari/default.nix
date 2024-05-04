@@ -1,6 +1,6 @@
 { lib
 , buildPythonPackage
-, fetchPypi
+, fetchFromGitHub
 , typing-extensions
 , python3Packages
 , setuptools-scm
@@ -10,18 +10,22 @@
 
 buildPythonPackage rec {
   pname = "mokkari";
-  version = "3.1.0";
+  version = "2.6.1";
   format = "pyproject";
 
-  src = fetchPypi {
+  src = fetchFromGitHub {
     inherit pname version;
-    sha256 = "sha256-DrVNidm9/i8a45CcRswA97aXX6tOe4BG4wdyTfNSm3E=";
+    repo = "mokkari";
+    rev = "ae594390723ff7e5dd9ab9f0e713599e9e346008";
+    owner="Metron-Project";
+    sha256 = "sha256-V3oEcTZ3ivAMK/v1j78bmFx1DGNZO6fXMfMdjorQZIQ=";
   };
 
   propagatedBuildInputs = [
     typing-extensions
     python3Packages.pytest
     setuptools-scm
+    python3.pkgs.marshmallow
     python3.pkgs.pydantic-core
     python3.pkgs.pydantic
     python3.pkgs.pydantic-scim
