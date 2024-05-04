@@ -1,10 +1,8 @@
-{ lib, git, python3,  libsForQt5,
-  #  python3Packages,
-  # unrar,
-  fetchPypi,
-  # fetchFromGitHub,
+{ lib,
+  git,
+  python3,
+  libsForQt5,
   fetchgit,
-  python3Packages
 }:
 let
   dependenciesPython = python3.withPackages (pkgs: [
@@ -27,7 +25,6 @@ let
     python3.pkgs.text2digits #a12
     python3.pkgs.typing-extensions #a12
     python3.pkgs.wordninja #a12
-
     # options.extras_require
     # 7Z
     python3.pkgs.py7zr #a12    
@@ -42,112 +39,29 @@ let
     python3.pkgs.pyqtwebengine #a12
     python3.pkgs.comicinfoxml
     python3.pkgs.gcd-talker #a12
-#    python3.pkgs.metron_talker #a12
+    python3.pkgs.metron_talker #a12
     python3.pkgs.pillow-avif-plugin #a12
     python3.pkgs.py7zr #a12    
     python3.pkgs.rarfile #a12
     python3.pkgs.pyicu #a12
-    # avif
     python3.pkgs.pillow-avif-plugin #a12
-    #cix
     python3.pkgs.comicinfoxml
-    #gcd
     python3.pkgs.gcd-talker #a12
-    #metron
     python3.pkgs.metron_talker #a12
-    #test-env
     python3.pkgs.pytest #a12
-    #test-env format
     python3.pkgs.black #a12
     python3.pkgs.isort #a12
     python3.pkgs.autoflake #a12
     python3.pkgs.pyupgrade #a12
-    # test-env lint
     python3.pkgs.flake8 #a12
     python3.pkgs.mypy #a12
     python3.pkgs.types-setuptools #a12
     python3.pkgs.types-requests #a12
-    
     # Running Deps 
-    python3.pkgs.mokkari #a12
-    #python3.pkgs.configparser 
-    #python3.pkgs.hatchling
-    #python3.pkgs.pycountry
-    #python3.pkgs.pydantic
-    #python3.pkgs.pydantic-core
-    #python3.pkgs.pydantic-scim
-    #python3.pkgs.pyinstaller
-    #python3.pkgs.pypdf2
-    #python3.pkgs.setuptools
-    #python3.pkgs.pywayland
-    #python3.pkgs.unrar-cffi
-    #python3.pkgs.xcffib
-    #python3.pkgs.zipfile2
-    #python3.pkgs.pytest-flake8
-    #python3.pkgs.pydantic-extra-types
-    #python3.pkgs.pydantic-settings
-#    mokkari
     python3.pkgs.poetry-core
     python3.pkgs.ratelimit
     python3.pkgs.requests
   ]);
-
-  mokkari = python3Packages.buildPythonPackage rec {
-    pname = "mokkari";
-    version = "3.1.0";
-    format = "pyproject";
-
-    src = fetchPypi {
-      inherit pname version;
-      sha256 = "sha256-DrVNidm9/i8a45CcRswA97aXX6tOe4BG4wdyTfNSm3E=";
-    };
-    propagatedBuildInputs = [
-      python3.pkgs.poetry-core
-      python3.pkgs.ratelimit
-      python3.pkgs.requests
-      python3.pkgs.pydantic
-      python3.pkgs.mokkari
-    # python3.pkgs.typing-extensions
-    # python3.pkg.pytest
-    # python3.pkgs.setuptools-scm
-    # python3.pkgs.pydantic-core
-    # python3.pkgs.pydantic-scim
-    # python3.pkgs.invoke
-    # python3.pkgs.isort
-    # python3.pkgs.pytest
-    # python3.pkgs.tox
-    # python3.pkgs.setuptools_scm
-    ];
-    buildInputs = [
-    # python3.pkgs.typing-extensions
-    # python3.pkg.pytest
-    # python3.pkgs.setuptools-scm
-    # python3.pkgs.pydantic-core
-    # python3.pkgs.pydantic
-    # python3.pkgs.pydantic-scim
-    # python3.pkgs.invoke
-    # python3.pkgs.isort
-    # python3.pkgs.pytest
-    # python3.pkgs.tox
-    # python3.pkgs.setuptools_scm
-    # 
-    ];
-    nativeBuildInputs = [
-#      python3.pkgs.typing-extensions
-#      python3.pkg.pytest
-#      python3.pkgs.setuptools-scm
-#      python3.pkgs.pydantic-core
-#      python3.pkgs.pydantic
-#      python3.pkgs.pydantic-scim
-#      python3.pkgs.invoke
-#      python3.pkgs.isort
-#      python3.pkgs.pytest
-#      python3.pkgs.tox
-#      python3.pkgs.setuptools_scm
-#      
-    ];
-
-  };
   
 in
 python3.pkgs.buildPythonApplication {
@@ -162,9 +76,7 @@ rev = "6ac2e326121bf582e38c61cf1b9179059989d897";
 #      rev = "996397b9d51872ea2a3bae9ef890495775a196f8";
       hash = "sha256-r2ofRx4D4A8lsBxvz59bXloQaLHvpQW4F/Lj0iC92mY=";
     leaveDotGit = true;
-
   };
-
   preFixup = ''
    wrapQtApp "$out/bin/comictagger"
 '';
@@ -177,10 +89,9 @@ rev = "6ac2e326121bf582e38c61cf1b9179059989d897";
     git
     libsForQt5.wrapQtAppsHook
   ];
- postPatch = ''
-substituteInPlace comictalker/comictalker.py \
---replace "1.6.0a7" "0.1.dev1"
-substituteInPlace setup.cfg \
+postPatch = ''
+substituteInPlace comictalker/__init__.py \
+--replace-fail "if ct_version >= parse(obj.comictagger_min_ver):" "if ct_version != parse(obj.comictagger_min_ver):"
 '';
   meta = with lib; {
     description = "A multi-platform app for writing metadata to digital comics";
