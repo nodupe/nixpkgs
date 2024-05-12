@@ -193,7 +193,7 @@ with pkgs;
       pythonInterpreter = "${python3.withPackages (ps: [ ps.pyelftools ])}/bin/python";
       autoPatchelfScript = ../build-support/setup-hooks/auto-patchelf.py;
     };
-    meta.platforms = lib.platforms.linux;
+    meta.platforms = lib.platforms.linux ++ lib.platforms.freebsd;
   } ../build-support/setup-hooks/auto-patchelf.sh;
 
   tomato-c = callPackage ../applications/misc/tomato-c { };
@@ -230,8 +230,6 @@ with pkgs;
   # addOpenGLRunpath should be added to aliases.nix after the 24.05 branch-off.
   # Post 24.11 branch-off, this should throw an error in aliases.nix.
   addOpenGLRunpath = callPackage ../build-support/add-opengl-runpath { };
-
-  quickemu = callPackage ../development/quickemu { };
 
   quickgui = callPackage ../applications/virtualization/quickgui { };
 
@@ -541,8 +539,6 @@ with pkgs;
   containerpilot = callPackage ../applications/networking/cluster/containerpilot { };
 
   coolercontrol = recurseIntoAttrs (callPackage ../applications/system/coolercontrol { });
-
-  coost = callPackage ../development/libraries/coost { };
 
   confetty = callPackage ../applications/misc/confetty { };
 
@@ -4489,10 +4485,6 @@ with pkgs;
     '';
   });
 
-  caddy = callPackage ../servers/caddy { };
-
-  xcaddy = callPackage ../servers/caddy/xcaddy { };
-
   traefik = callPackage ../servers/traefik { };
 
   traefik-certs-dumper = callPackage ../tools/misc/traefik-certs-dumper { };
@@ -5550,10 +5542,7 @@ with pkgs;
   hypr = callPackage ../applications/window-managers/hyprwm/hypr {
     cairo = cairo.override { xcbSupport = true; };  };
 
-  hyprland = callPackage ../applications/window-managers/hyprwm/hyprland {
-    wlroots-hyprland = callPackage ../applications/window-managers/hyprwm/hyprland/wlroots.nix { };
-    udis86-hyprland = callPackage ../applications/window-managers/hyprwm/hyprland/udis86.nix { };
-  };
+  hyprland = callPackage ../applications/window-managers/hyprwm/hyprland { };
 
   hyprland-autoname-workspaces = callPackage ../applications/misc/hyprland-autoname-workspaces { };
 
@@ -5663,7 +5652,7 @@ with pkgs;
 
   klipper = callPackage ../servers/klipper { };
 
-  klipper-firmware = callPackage ../servers/klipper/klipper-firmware.nix { gcc-arm-embedded = gcc-arm-embedded-11; };
+  klipper-firmware = callPackage ../servers/klipper/klipper-firmware.nix { gcc-arm-embedded = gcc-arm-embedded-13; };
 
   klipper-flash = callPackage ../servers/klipper/klipper-flash.nix { };
 
@@ -7830,7 +7819,7 @@ with pkgs;
 
   enscript = callPackage ../tools/text/enscript { };
 
-  ensemble-chorus = callPackage ../applications/audio/ensemble-chorus { stdenv = gcc8Stdenv; };
+  ensemble-chorus = callPackage ../applications/audio/ensemble-chorus { };
 
   entr = callPackage ../tools/misc/entr { };
 
@@ -8105,8 +8094,6 @@ with pkgs;
   flips = callPackage ../tools/compression/flips { };
 
   flowblade = callPackage ../applications/video/flowblade { };
-
-  fontfor = callPackage ../tools/misc/fontfor { };
 
   fontforge = lowPrio (callPackage ../tools/misc/fontforge {
     inherit (darwin.apple_sdk.frameworks) Carbon Cocoa;
@@ -12947,8 +12934,6 @@ with pkgs;
 
   shout = nodePackages.shout;
 
-  showmethekey = callPackage ../applications/video/showmethekey { };
-
   shrikhand = callPackage ../data/fonts/shrikhand { };
 
   shunit2 = callPackage ../tools/misc/shunit2 { };
@@ -15782,6 +15767,13 @@ with pkgs;
          && stdenv.buildPlatform == stdenv.hostPlatform
       then buildPackages.gnat-bootstrap11
       else buildPackages.gnat11;
+    stdenv =
+      if stdenv.hostPlatform == stdenv.targetPlatform
+         && stdenv.buildPlatform == stdenv.hostPlatform
+         && stdenv.buildPlatform.isDarwin
+         && stdenv.buildPlatform.isx86_64
+      then overrideCC stdenv gnat-bootstrap11
+      else stdenv;
   });
 
   gnat12 = wrapCC (gcc12.cc.override {
@@ -16324,7 +16316,7 @@ with pkgs;
     # assumption is that or any later version is good.
     choose = platform:
       /**/ if platform.isDarwin then 16
-      else if platform.isFreeBSD then 12
+      else if platform.isFreeBSD then 16
       else if platform.isAndroid then 12
       else if platform.isLinux then 17
       else if platform.isWasm then 16
@@ -16729,7 +16721,6 @@ with pkgs;
     inherit (darwin.apple_sdk.frameworks) Security;
   };
   cargo-fuzz = callPackage ../development/tools/rust/cargo-fuzz { };
-  cargo-geiger = callPackage ../development/tools/rust/cargo-geiger { };
 
   cargo-hf2 = callPackage ../development/tools/rust/cargo-hf2 {
     inherit (darwin.apple_sdk.frameworks) AppKit;
@@ -18554,8 +18545,6 @@ with pkgs;
   sqlcl = callPackage ../development/tools/database/sqlcl { };
 
   sigrok-firmware-fx2lafw = callPackage ../development/tools/sigrok-firmware-fx2lafw { };
-
-  cli11 = callPackage ../development/tools/misc/cli11 { };
 
   datree = callPackage ../development/tools/datree { };
 
@@ -20564,15 +20553,7 @@ with pkgs;
 
   digiham = callPackage ../applications/radio/digiham { };
 
-  dillo = callPackage ../applications/networking/browsers/dillo {
-    fltk = fltk13;
-  };
-
-  dillong = callPackage ../applications/networking/browsers/dillong { };
-
   directfb = callPackage ../development/libraries/directfb { };
-
-  discord-gamesdk = callPackage ../development/libraries/discord-gamesdk { };
 
   discord-rpc = callPackage ../development/libraries/discord-rpc {
     inherit (darwin.apple_sdk.frameworks) AppKit;
@@ -22545,7 +22526,7 @@ with pkgs;
   # We also provide `libiconvReal`, which will always be a standalone libiconv,
   # just in case you want it regardless of platform.
   libiconv =
-    if lib.elem stdenv.hostPlatform.libc [ "glibc" "musl" "nblibc" "wasilibc" ]
+    if lib.elem stdenv.hostPlatform.libc [ "glibc" "musl" "nblibc" "wasilibc" "fblibc" ]
       then libcIconv (if stdenv.hostPlatform != stdenv.buildPlatform
         then libcCross
         else stdenv.cc.libc)
@@ -24787,8 +24768,6 @@ with pkgs;
 
   unixODBCDrivers = recurseIntoAttrs (callPackages ../development/libraries/unixODBCDrivers { });
 
-  ustr = callPackage ../development/libraries/ustr { };
-
   usrsctp = callPackage ../development/libraries/usrsctp { };
 
   usbredir = callPackage ../development/libraries/usbredir { };
@@ -25137,8 +25116,6 @@ with pkgs;
   zitadel-tools = callPackage ../tools/misc/zitadel-tools { };
 
   zix = callPackage ../development/libraries/audio/zix { };
-
-  zz = callPackage ../development/compilers/zz { };
 
   zziplib = callPackage ../development/libraries/zziplib { };
 
@@ -31464,8 +31441,6 @@ with pkgs;
 
   googleearth-pro = libsForQt5.callPackage ../applications/misc/googleearth-pro { };
 
-  google-chrome = callPackage ../applications/networking/browsers/google-chrome { };
-
   go-graft = callPackage ../applications/networking/go-graft { };
 
   gostatic = callPackage ../applications/misc/gostatic { };
@@ -35043,8 +35018,6 @@ with pkgs;
   };
 
   tremc = callPackage ../applications/networking/p2p/tremc { };
-
-  tribler = callPackage ../applications/networking/p2p/tribler { };
 
   trillian-im = callPackage ../applications/networking/instant-messengers/trillian-im { };
 
@@ -39730,9 +39703,14 @@ with pkgs;
 
   dnadd = callPackage ../tools/nix/dnadd { };
 
-  nix-eval-jobs = callPackage ../tools/package-management/nix-eval-jobs {
-    nix = nixVersions.nix_2_21;
-  };
+  nix-eval-jobs = if stdenv.isDarwin then
+    callPackage ../tools/package-management/nix-eval-jobs/2.19.nix {
+      nix = nixVersions.nix_2_19;
+    }
+  else
+    callPackage ../tools/package-management/nix-eval-jobs {
+      nix = nixVersions.nix_2_22;
+    };
 
   nix-doc = callPackage ../tools/package-management/nix-doc { };
 
@@ -40428,6 +40406,15 @@ with pkgs;
 
   winePackagesFor = wineBuild: lib.makeExtensible (self: with self; {
     callPackage = newScope self;
+    stdenv =
+      if pkgs.stdenv.isDarwin then
+        # Match upstream, which builds with the latest SDK and a 10.7 deployment target.
+        overrideSDK pkgs.stdenv {
+          darwinMinVersion = "10.7";
+          darwinSdkVersion = "11.0";
+        }
+      else
+        pkgs.stdenv;
 
     inherit wineBuild;
 
@@ -40961,8 +40948,6 @@ with pkgs;
 
   gpio-utils = callPackage ../os-specific/linux/kernel/gpio-utils.nix { };
 
-  navidrome = callPackage ../servers/misc/navidrome { };
-
   zalgo = callPackage ../tools/misc/zalgo { };
 
   inherit (callPackage ../applications/misc/zettlr { }) zettlr;
@@ -41112,4 +41097,8 @@ with pkgs;
   insulator2 = callPackage ../applications/misc/insulator2 {};
 
   animdl = python3Packages.callPackage ../applications/video/animdl { };
+
+  dillo = callPackage ../by-name/di/dillo/package.nix {
+    fltk = fltk13;
+  };
 }
