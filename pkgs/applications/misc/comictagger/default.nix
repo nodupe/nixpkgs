@@ -72,9 +72,10 @@ python3.pkgs.buildPythonApplication {
     dists = "x86_64-linux";
     src = fetchgit {
       url = "https://github.com/comictagger/comictagger.git";
-rev = "6ac2e326121bf582e38c61cf1b9179059989d897";
-#      rev = "996397b9d51872ea2a3bae9ef890495775a196f8";
-      hash = "sha256-r2ofRx4D4A8lsBxvz59bXloQaLHvpQW4F/Lj0iC92mY=";
+       rev = "851339d4e39e869f81d6868f2f9f59ac96304be3";
+        #"6ac2e326121bf582e38c61cf1b9179059989d897";
+       hash = "sha256-Xg6tQGRYhN1rz6A+2yaZBQVEL9pkFlWMWdrOIKu2omc=";
+         #"sha256-r2ofRx4D4A8lsBxvz59bXloQaLHvpQW4F/Lj0iC92mY=";
     leaveDotGit = true;
   };
   preFixup = ''
