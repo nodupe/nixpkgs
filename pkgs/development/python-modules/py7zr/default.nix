@@ -24,7 +24,7 @@ let
 #      inherit version;
       owner = "Rogdham";
       repo = "pyzstd";
-      sha256 = "sha256-kLMYT/7WfCvat5UdE4VJe4xBX2F4CThlj1XTxo0OhQA=";
+      sha256 = "sha256-6iZom1M8LBnjT/g6mHcniX41Pc8WqbwtbEmDd1XDO3Y=";
       fetchSubmodules = true;
       leaveDotGit = true;
       rev = "dbd449837b177bfe81392911cf4f043f8a674dab";
