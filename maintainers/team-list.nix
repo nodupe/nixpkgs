@@ -428,7 +428,6 @@ with lib.maintainers; {
       bandresen
       hlolli
       glittershark
-      babariviere
       ericdallo
       thiagokokada
     ];
@@ -961,6 +960,12 @@ with lib.maintainers; {
     ];
     scope = "Maintain SageMath and the dependencies that are likely to break it.";
     shortName = "SageMath";
+  };
+
+  sdl = {
+    members = [ ];
+    scope = "Maintain SDL libraries.";
+    shortName = "SDL";
   };
 
   sphinx = {
