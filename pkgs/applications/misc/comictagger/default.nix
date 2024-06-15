@@ -68,14 +68,12 @@ python3.pkgs.buildPythonApplication {
   pname = "comictagger";
   format = "pyproject";
   #### Different develop versions
-    version = "develop";
+    version = "1.6.0-alpha.12";
     dists = "x86_64-linux";
     src = fetchgit {
       url = "https://github.com/comictagger/comictagger.git";
-       rev = "7bbc3f3e2ce572f7097f332dbfab2bb6489d1ea3";
-        #"6ac2e326121bf582e38c61cf1b9179059989d897";
+      rev = "2e2d886cb2443f067ba99ae0fb138afe58e8a6d7";
        hash = "sha256-+58C/GN2G6f0X7pC1edh99xET0Uqn22D8Thvfov4Z68=";
-         #"sha256-r2ofRx4D4A8lsBxvz59bXloQaLHvpQW4F/Lj0iC92mY=";
     leaveDotGit = true;
   };
   preFixup = ''
