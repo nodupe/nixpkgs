@@ -1,6 +1,7 @@
 { version
 , engineVersion
 , patches
+, channel
 , dart
 , src
 , pubspecLock
@@ -74,7 +75,7 @@ let
           "devToolsVersion": "$(cat "${dart}/bin/resources/devtools/version.json" | jq -r .version)",
           "flutterVersion": "${version}",
           "frameworkVersion": "${version}",
-          "channel": "stable",
+          "channel": "${channel}",
           "repositoryUrl": "https://github.com/flutter/flutter.git",
           "frameworkRevision": "nixpkgs000000000000000000000000000000000",
           "frameworkCommitDate": "1970-01-01 00:00:00",
@@ -124,7 +125,7 @@ let
       '';
 
       passthru = {
-        inherit dart engineVersion artifactHashes;
+        inherit dart engineVersion artifactHashes channel;
         tools = flutterTools;
         # The derivation containing the original Flutter SDK files.
         # When other derivations wrap this one, any unmodified files
@@ -141,7 +142,9 @@ let
         homepage = "https://flutter.dev";
         license = licenses.bsd3;
         platforms = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
-        maintainers = with maintainers; [ babariviere ericdallo FlafyDev hacker1024 ];
+        maintainers = teams.flutter.members ++ (with maintainers; [
+          ericdallo
+        ]);
       };
     };
 in

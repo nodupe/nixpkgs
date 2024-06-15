@@ -20,6 +20,8 @@ let
 in lib.makeOverridable ({
   # The kernel version
   version,
+  # The kernel pname (should be set for variants)
+  pname ? "linux",
   # Position of the Linux build expression
   pos ? null,
   # Additional kernel make flags
@@ -301,10 +303,10 @@ let
         export HOME=${installkernel}
       '';
 
-      # Some image types need special install targets (e.g. uImage is installed with make uinstall)
+      # Some image types need special install targets (e.g. uImage is installed with make uinstall on arm)
       installTargets = [
         (kernelConf.installTarget or (
-          /**/ if kernelConf.target == "uImage" then "uinstall"
+          /**/ if kernelConf.target == "uImage" && stdenv.hostPlatform.linuxArch == "arm" then "uinstall"
           else if kernelConf.target == "zImage" || kernelConf.target == "Image.gz" then "zinstall"
           else "install"))
       ];
@@ -408,8 +410,7 @@ assert lib.versionOlder version "5.8" -> libelf != null;
 assert lib.versionAtLeast version "5.8" -> elfutils != null;
 
 stdenv.mkDerivation ((drvAttrs config stdenv.hostPlatform.linux-kernel kernelPatches configfile) // {
-  pname = "linux";
-  inherit version;
+  inherit pname version;
 
   enableParallelBuilding = true;
 
