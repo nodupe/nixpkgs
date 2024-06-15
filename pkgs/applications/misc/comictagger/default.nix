@@ -158,7 +158,8 @@ python3.pkgs.buildPythonApplication {
     src = fetchgit {
       url = "https://github.com/comictagger/comictagger.git";
       rev ="e5f6a7d1d636eccf68538283aac898f82fed082d";
-      hash = "sha256-AQcjdel5elOCDnBnARimTZXxY5k3hVWOXufoE9fqTlc=";
+#      hash = "sha256-AQcjdel5elOCDnBnARimTZXxY5k3hVWOXufoE9fqTlc=";
+      hash ="sha256-qRI/+lEpz6+FuD64F/VrhnrHFH2NgMEJYbHmyrf3Ct0=";
     leaveDotGit = true;
 
   };
